@@ -17,7 +17,7 @@ public class Scheduler{
     Stack<Integer> executionOrder;
 
     public Scheduler() throws IOException {
-        parameters = YamlReader.readFile("parameters.yaml");
+        parameters = YamlReader.getParams();
         agents = new ArrayList<>();
         r = new Random(parameters.getSeed());
         executionOrder = new Stack<>();
@@ -38,6 +38,13 @@ public class Scheduler{
     public void init() {
         environment = new Environment(parameters.getSize());
         populateEnvironment();
+        infectPatientZero();
+    }
+
+    private void infectPatientZero() {
+        for (int i=0 ; i< parameters.getNbOfPatientZero(); i++) {
+            agents.get(r.nextInt(parameters.getPopulation())).setState(Agent.State.INFECTED);
+        }
     }
 
     private void generateExecutionOrder() {
@@ -47,13 +54,13 @@ public class Scheduler{
         Collections.shuffle(executionOrder,r);
     }
 
-    private void wakeAgents() {
+    private void wakeAgents() throws IOException {
         while (!executionOrder.isEmpty()) {
-            agents.get(executionOrder.pop()).move();
+            agents.get(executionOrder.pop()).wakeUp();
         }
     }
 
-    public void run() throws InterruptedException {
+    public void run() throws InterruptedException, IOException {
         while (true) {
             generateExecutionOrder();
             wakeAgents();

@@ -5,9 +5,17 @@ public class Parameters {
     int seed;
     int population;
     int size;
+    int nbOfPatientZero;
+    float infectionChance;
+    float incubationRate;
+    float recoveryRate;
 
     public Parameters() {
     }
+
+    public int getNbOfPatientZero() {return nbOfPatientZero;}
+
+    public void setNbOfPatientZero(int nbOfPatientZero) {this.nbOfPatientZero = nbOfPatientZero;}
 
     public int getSeed() {
         return seed;
@@ -33,4 +41,25 @@ public class Parameters {
         this.size = size;
     }
 
+    public float getInfectionChance() { return infectionChance; }
+
+    public void setInfectionChance(float infectionChance) {
+        this.infectionChance = infectionChance;
+    }
+
+    public float getIncubationRate() {
+        return incubationRate;
+    }
+
+    public void setIncubationRate(float incubationRate) {
+        this.incubationRate = incubationRate;
+    }
+
+    public float getRecoveryRate() {
+        return recoveryRate;
+    }
+
+    public void setRecoveryRate(float recoveryRate) {
+        this.recoveryRate = recoveryRate;
+    }
 }

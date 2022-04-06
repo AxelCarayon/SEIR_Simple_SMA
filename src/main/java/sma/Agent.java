@@ -1,15 +1,26 @@
 package sma;
 
+import utils.YamlReader;
+
 import java.awt.Point;
 import java.util.Random;
 
-public class Agent implements IAgent{
+public class Agent {
+
+    public enum State {
+        SUSCEPTIBLE,
+        EXPOSED,
+        INFECTED,
+        RECOVERED
+    }
 
     private Point position;
     private Random r;
     private Environment environment;
 
     private State state;
+    private Boolean exposedThisCycle;
+    private Boolean infectedThisCycle;
 
     public Agent(Point position, Environment environment,int seed) {
         this.position = position;
@@ -18,8 +29,7 @@ public class Agent implements IAgent{
         this.r = new Random(seed);
     }
 
-    @Override
-    public void move() {
+    private void move() {
         int move = r.nextInt(4);
 
         Point newPosition = switch (move) {
@@ -37,18 +47,63 @@ public class Agent implements IAgent{
         }
     }
 
-    @Override
-    public void contact() {
-        //TODO
+    private void contact() {
+        for (Agent neighbor: environment.getNeighbors(position)) {
+            if (neighbor.getState() == State.INFECTED) {
+                int roll = r.nextInt(100);
+                if (roll <= YamlReader.getParams().getInfectionChance()*100) {
+                    state = State.EXPOSED;
+                    exposedThisCycle = true;
+                }
+            }
+        }
     }
 
-    @Override
-    public void getStatus() {
-        //TODO
+    private void incubate() {
+        int roll = r.nextInt(100);
+        if (roll <= YamlReader.getParams().getIncubationRate()*100) {
+            state = State.INFECTED;
+            infectedThisCycle = true;
+        }
+    }
+
+    private void recover() {
+        int roll = r.nextInt(100);
+        if (roll <= YamlReader.getParams().getRecoveryRate()*100) {
+            state = State.RECOVERED;
+        }
+    }
+
+    public State getState() {
+        return this.state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public void wakeUp() {
+        exposedThisCycle = false;
+        infectedThisCycle = false;
+        if (state == State.SUSCEPTIBLE) {
+            contact();
+        }
+        move();
+        if (state == State.EXPOSED && !exposedThisCycle) {
+            incubate();
+        }
+        if (state == State.INFECTED && !infectedThisCycle) {
+            recover();
+        }
     }
 
     @Override
     public String toString() {
-        return "A";
+        return switch (state) {
+            case SUSCEPTIBLE -> "S";
+            case EXPOSED -> "E";
+            case INFECTED -> "I";
+            case RECOVERED -> "R";
+        };
     }
 }
