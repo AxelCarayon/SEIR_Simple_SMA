@@ -1,0 +1,3 @@
+seed : 47857618
+population : 10 #number of agents
+size : 10 #size of the world, square
