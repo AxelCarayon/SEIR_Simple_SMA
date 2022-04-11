@@ -1,6 +1,7 @@
 package sma;
 
 import utils.YamlReader;
+import view.GraphicEnvironment;
 
 import java.awt.Point;
 import java.util.Random;
@@ -16,35 +17,31 @@ public class Agent {
 
     private Point position;
     private Random r;
-    private Environment environment;
+    private GraphicEnvironment environment;
+    private int id;
 
     private State state;
     private Boolean exposedThisCycle;
     private Boolean infectedThisCycle;
 
-    public Agent(Point position, Environment environment,int seed) {
+    public Agent(Point position, GraphicEnvironment environment,int seed,int id) {
         this.position = position;
         this.environment = environment;
         this.state = State.SUSCEPTIBLE;
         this.r = new Random(seed);
+        this.id = id;
     }
 
     private void move() {
         int move = r.nextInt(4);
 
-        Point newPosition = switch (move) {
-            case Environment.LEFT -> new Point(position.x-1,position.y);
-            case Environment.RIGHT -> new Point(position.x+1,position.y);
-            case Environment.UP -> new Point(position.x,position.y-1);
-            case Environment.DOWN -> new Point(position.x,position.y+1);
+        position = switch (move) {
+            case IEnvironment.LEFT -> new Point(position.x-environment.RADIUS,position.y);
+            case IEnvironment.RIGHT -> new Point(position.x+environment.RADIUS,position.y);
+            case IEnvironment.UP -> new Point(position.x,position.y-environment.RADIUS);
+            case IEnvironment.DOWN -> new Point(position.x,position.y+environment.RADIUS);
             default -> throw new IllegalStateException("Unexpected value: " + move);
         };
-
-        if (environment.isCaseEmpty(newPosition)) {
-            environment.emptyCase(position);
-            environment.fillCase(this,newPosition);
-            position = newPosition;
-        }
     }
 
     private void contact() {
@@ -85,16 +82,24 @@ public class Agent {
     public void wakeUp() {
         exposedThisCycle = false;
         infectedThisCycle = false;
+        move();
         if (state == State.SUSCEPTIBLE) {
             contact();
         }
-        move();
         if (state == State.EXPOSED && !exposedThisCycle) {
             incubate();
         }
         if (state == State.INFECTED && !infectedThisCycle) {
             recover();
         }
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override

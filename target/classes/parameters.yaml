@@ -1,6 +1,6 @@
-seed : 47857619
-population : 10 #number of agents
-size : 7 #size of the world, square
+seed : 120
+population : 5000 #number of agents
+size : 500 #size of the world in pixels
 nbOfPatientZero : 1
 infectionChance : 0.9 #percentage of chance that an infected agent will spread to a susceptible agent
 incubationRate : 0.6 #chance that an exposed agent become infected each cycle

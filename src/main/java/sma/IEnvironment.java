@@ -4,8 +4,9 @@ import java.awt.Point;
 import java.util.List;
 
 public interface IEnvironment {
-    Boolean isCaseEmpty(Point p);
-    void fillCase(Agent a,Point p);
-    void emptyCase(Point p);
+    int LEFT = 0;
+    int RIGHT = 1;
+    int UP = 2;
+    int DOWN = 3;
     List<Agent> getNeighbors(Point position);
 }
