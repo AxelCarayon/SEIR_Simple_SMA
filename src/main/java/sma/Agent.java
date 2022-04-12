@@ -33,13 +33,16 @@ public class Agent {
     private void move() {
         int move = r.nextInt(4);
 
-        position = switch (move) {
+        Point newPosition = switch (move) {
             case IEnvironment.LEFT -> new Point(position.x-environment.RADIUS,position.y);
             case IEnvironment.RIGHT -> new Point(position.x+environment.RADIUS,position.y);
             case IEnvironment.UP -> new Point(position.x,position.y-environment.RADIUS);
             case IEnvironment.DOWN -> new Point(position.x,position.y+environment.RADIUS);
             default -> throw new IllegalStateException("Unexpected value: " + move);
         };
+        if (newPosition.x <= environment.getWidth() && newPosition.x >= 0 && newPosition.y <= environment.getHeight() && newPosition.y >=0 ) {
+            position = newPosition;
+        }
     }
 
     private void contact() {
