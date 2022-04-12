@@ -18,18 +18,16 @@ public class Agent {
     private Point position;
     private Random r;
     private GraphicEnvironment environment;
-    private int id;
 
     private State state;
     private Boolean exposedThisCycle;
     private Boolean infectedThisCycle;
 
-    public Agent(Point position, GraphicEnvironment environment,int seed,int id) {
+    public Agent(Point position, int seed, GraphicEnvironment environment) {
         this.position = position;
-        this.environment = environment;
         this.state = State.SUSCEPTIBLE;
+        this.environment = environment;
         this.r = new Random(seed);
-        this.id = id;
     }
 
     private void move() {
@@ -96,10 +94,6 @@ public class Agent {
 
     public Point getPosition() {
         return position;
-    }
-
-    public int getId() {
-        return id;
     }
 
     @Override

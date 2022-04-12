@@ -19,12 +19,14 @@ public class GraphicEnvironment extends JFrame implements IEnvironment {
     private int y_offset;
     private int x_offset;
 
-    private int width = YamlReader.getParams().getSize();
-    private int height = YamlReader.getParams().getSize();
+    private int windowWidth;
+    private int windowHeight;
 
-    public GraphicEnvironment(Agent[] agents) {
+    public GraphicEnvironment(int width,int height,Agent[] agents) {
+        this.windowWidth = width;
+        this.windowHeight = height;
         this.agents = agents;
-        setSize(width,height);
+        setSize(windowWidth,windowHeight);
         setName(WINDOW_NAME);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -37,7 +39,7 @@ public class GraphicEnvironment extends JFrame implements IEnvironment {
 
     @Override
     public void paint(Graphics g) {
-        g.clearRect(0,0,width,height);
+        super.paint(g);
         for (int i = 0; i < agents.length; i++) {
             var agent = agents[i];
             if (agent != null) {
