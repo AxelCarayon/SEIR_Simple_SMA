@@ -2,8 +2,11 @@ package sma;
 
 import models.Parameters;
 import utils.YamlReader;
+import view.FrameBuilder;
 import view.GraphicEnvironment;
+import view.StatisticsCanvas;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 
@@ -14,11 +17,18 @@ public class SMA {
     private Agent[] agents;
     private GraphicEnvironment environment;
     private Scheduler scheduler;
+    private StatisticsCanvas statisticsCanvas;
+    private JFrame window;
+
+    private FrameBuilder frameBuilder;
 
     public SMA() {
         parameters = YamlReader.getParams();
         r = new Random(parameters.getSeed());
         agents = new Agent[parameters.getPopulation()];
+
+        statisticsCanvas = new StatisticsCanvas(500,500);
+        frameBuilder = new FrameBuilder();
     }
 
 
@@ -40,6 +50,11 @@ public class SMA {
         environment = new GraphicEnvironment(parameters.getSize(),parameters.getSize(),agents);
         populateEnvironment();
         infectPatientZero();
+
+        frameBuilder.addComponent(environment,FrameBuilder.TOP);
+        frameBuilder.addComponent(statisticsCanvas,FrameBuilder.RIGHT);
+        window = frameBuilder.buildWindow();
+
         scheduler = new Scheduler(agents, parameters.getSeed());
     }
 
@@ -47,7 +62,9 @@ public class SMA {
         while (true) {
             scheduler.nextCycle();
             environment.repaint();
-            Thread.sleep(1000);
+            statisticsCanvas.updateValues(environment.getAgentStatus());
+            statisticsCanvas.repaint();
+            Thread.sleep(100);
         }
     }
 

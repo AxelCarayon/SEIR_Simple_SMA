@@ -2,22 +2,18 @@ package view;
 
 import sma.Agent;
 import sma.IEnvironment;
-import utils.YamlReader;
+import utils.Pair;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class GraphicEnvironment extends JFrame implements IEnvironment {
+public class GraphicEnvironment extends Canvas implements IEnvironment {
 
     public final static int RADIUS = 10;
-    public final static String WINDOW_NAME = "SMA-SEIR";
 
-    public Agent[] agents;
-
-    private int y_offset;
-    private int x_offset;
+    private Agent[] agents;
 
     private int windowWidth;
     private int windowHeight;
@@ -27,13 +23,7 @@ public class GraphicEnvironment extends JFrame implements IEnvironment {
         this.windowHeight = height;
         this.agents = agents;
         setSize(windowWidth,windowHeight);
-        setName(WINDOW_NAME);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
-        setLocationRelativeTo(null);
         setVisible(true);
-        y_offset = getInsets().top;
-        x_offset = getInsets().left;
     }
 
 
@@ -44,7 +34,7 @@ public class GraphicEnvironment extends JFrame implements IEnvironment {
             var agent = agents[i];
             if (agent != null) {
                 colorAgent(g,agent);
-                g.fillOval(agent.getPosition().x+x_offset,agent.getPosition().y+y_offset, RADIUS, RADIUS);
+                g.fillOval(agent.getPosition().x,agent.getPosition().y, RADIUS, RADIUS);
             }
         }
     }
@@ -58,6 +48,29 @@ public class GraphicEnvironment extends JFrame implements IEnvironment {
             }
         }
         return neighbors;
+    }
+
+    public HashMap<Agent.State,Pair<Integer,Color>> getAgentStatus() {
+
+        Pair<Integer,Color> susceptible = new Pair<>(0,Color.GRAY);
+        Pair<Integer,Color> exposed = new Pair<>(0,Color.YELLOW);
+        Pair<Integer,Color> infected = new Pair<>(0,Color.RED);
+        Pair<Integer,Color> recovered = new Pair<>(0,Color.green);
+
+        for (Agent agent : agents) {
+            switch (agent.getState()) {
+                case SUSCEPTIBLE -> susceptible.setFirst(susceptible.getFirst()+1);
+                case EXPOSED -> exposed.setFirst(exposed.getFirst()+1);
+                case INFECTED -> infected.setFirst(infected.getFirst()+1);
+                case RECOVERED -> recovered.setFirst(recovered.getFirst()+1);
+            }
+        }
+        var result = new HashMap<Agent.State,Pair<Integer,Color>>();
+        result.put(Agent.State.SUSCEPTIBLE,susceptible);
+        result.put(Agent.State.EXPOSED,exposed);
+        result.put(Agent.State.INFECTED,infected);
+        result.put(Agent.State.RECOVERED,recovered);
+        return result;
     }
 
     private Boolean detectCollision(Point pos1, Point pos2) {

@@ -7,7 +7,6 @@ import java.util.*;
 public class Scheduler{
 
     private Agent[] agents;
-    private GraphicEnvironment gEnvironment;
     private Stack<Integer> executionOrder;
     private Random r;
 
@@ -16,7 +15,6 @@ public class Scheduler{
         r = new Random(seed);
         executionOrder = new Stack<>();
     }
-
 
     private void generateExecutionOrder() {
         for (int i = 0; i < agents.length; i++) {
@@ -32,7 +30,7 @@ public class Scheduler{
         }
     }
 
-    public void nextCycle() throws InterruptedException {
+    public void nextCycle() {
         generateExecutionOrder();
         wakeAgents();
     }
