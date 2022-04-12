@@ -1,7 +1,9 @@
 seed : 120
-population : 5000 #number of agents
+population : 10000 #number of agents
 size : 500 #size of the world in pixels
 nbOfPatientZero : 1
-infectionChance : 0.6 #percentage of chance that an infected agent will spread to a susceptible agent
-incubationRate : 0.6 #chance that an exposed agent become infected each cycle
-recoveryRate : 0.1 #chance that an infected agent become recovered each cycle
+infectionChance : 0.1 #percentage of chance that an infected agent will spread to a susceptible agent
+incubationRate : 0.5 #chance that an exposed agent become infected each cycle
+recoveryRate : 0.05 #chance that an infected agent become recovered each cycle
+
+#TODO : ajouter le nu démographie

@@ -1,13 +1,17 @@
 package sma;
 
 import models.Parameters;
+import utils.DataAdapter;
+import utils.Pair;
+import utils.StatsRecorder;
 import utils.YamlReader;
 import view.FrameBuilder;
 import view.GraphicEnvironment;
 import view.StatisticsCanvas;
 
-import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Random;
 
 public class SMA {
@@ -18,7 +22,8 @@ public class SMA {
     private GraphicEnvironment environment;
     private Scheduler scheduler;
     private StatisticsCanvas statisticsCanvas;
-    private JFrame window;
+
+    private HashMap<Agent.State, Pair<Integer,Color>> stats;
 
     private FrameBuilder frameBuilder;
 
@@ -53,22 +58,28 @@ public class SMA {
 
         frameBuilder.addComponent(environment,FrameBuilder.TOP);
         frameBuilder.addComponent(statisticsCanvas,FrameBuilder.RIGHT);
-        window = frameBuilder.buildWindow();
+        frameBuilder.buildWindow();
 
         scheduler = new Scheduler(agents, parameters.getSeed());
     }
 
-    public void run() throws InterruptedException {
+    private void updateGraphics() {
+        statisticsCanvas.repaint();
+        environment.repaint();
+        statisticsCanvas.updateValues(stats);
+    }
+
+    public void run() throws InterruptedException, IOException {
         while (true) {
             scheduler.nextCycle();
-            environment.repaint();
-            statisticsCanvas.updateValues(environment.getAgentStatus());
-            statisticsCanvas.repaint();
+            stats = environment.getAgentStatus();
+            updateGraphics();
+            StatsRecorder.writeToCSV(DataAdapter.adaptData(stats),"output.csv");
             Thread.sleep(100);
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         SMA sma = new SMA();
         sma.init();
         sma.run();
