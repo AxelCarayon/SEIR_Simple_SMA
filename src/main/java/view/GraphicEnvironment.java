@@ -65,7 +65,6 @@ public class GraphicEnvironment extends Canvas implements IEnvironment {
             if (agent != null) {
                 colorAgent(g,agent);
                 drawCenteredCircle(g,agent.getPosition().x,agent.getPosition().y,RADIUS);
-                //g.fillOval(agent.getPosition().x,agent.getPosition().y, RADIUS, RADIUS);
             }
         }
     }
@@ -77,12 +76,6 @@ public class GraphicEnvironment extends Canvas implements IEnvironment {
         for (int i = 0; i < MAX_CHUNK; i++) {
             neighbors.addAll(getChunkNeighbors(i,p));
         }
-
-        //for (Agent agent : agents) {
-        //    if (detectCollision(p, agent.getPosition())) {
-        //        neighbors.add(agent);
-        //    }
-        //}
         return neighbors;
     }
 
@@ -144,8 +137,6 @@ public class GraphicEnvironment extends Canvas implements IEnvironment {
         double distanceSquared = xDif * xDif + yDif * yDif;
         return distanceSquared < (2*RADIUS) * (2*RADIUS);
     }
-
-    //TODO : vérifier les collisions
 
     private void colorAgent(Graphics g,Agent a) {
         switch (a.getState()) {
