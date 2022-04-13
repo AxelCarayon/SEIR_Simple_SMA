@@ -15,13 +15,8 @@ public class StatsRecorder {
         if (!outputFile.endsWith(".csv")) {
             throw new InvalidParameterException("outputFile is not a .csv file.");
         }
-        File file;
-        try {
-            file = new File(classLoader.getResource(outputFile).getFile());
-            file.createNewFile();
-        }catch (NullPointerException e){
-            throw new FileNotFoundException("No file called "+outputFile+" found in resources folder");
-        }
+        File file = new File(outputFile);
+        file.createNewFile();
 
         if (nbOfCycles == 0) {
             PrintWriter writer = new PrintWriter(file);

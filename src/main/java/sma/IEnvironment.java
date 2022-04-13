@@ -8,5 +8,12 @@ public interface IEnvironment {
     int RIGHT = 1;
     int UP = 2;
     int DOWN = 3;
+    int CENTER = 4;
+    int UP_LEFT = 5;
+    int UP_RIGHT = 6;
+    int DOWN_LEFT = 7;
+    int DOWN_RIGHT = 8;
+    int MAX_CHUNK = 9;
+
     List<Agent> getNeighbors(Point position);
 }

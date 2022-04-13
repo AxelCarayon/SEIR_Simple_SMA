@@ -40,7 +40,8 @@ public class Agent {
             case IEnvironment.DOWN -> new Point(position.x,position.y+environment.RADIUS);
             default -> throw new IllegalStateException("Unexpected value: " + move);
         };
-        if (newPosition.x <= environment.getWidth() && newPosition.x >= 0 && newPosition.y <= environment.getHeight() && newPosition.y >=0 ) {
+        if (newPosition.x <= environment.getWidth()-1 && newPosition.x >= 0 && newPosition.y <= environment.getHeight()-1 && newPosition.y >=0 ) {
+            environment.notifyNewPosition(position,newPosition,this);
             position = newPosition;
         }
     }

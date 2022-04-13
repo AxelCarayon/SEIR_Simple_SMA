@@ -39,7 +39,7 @@ public class SMA {
 
     private void populateEnvironment() {
         for (int i = 0; i<parameters.getPopulation();i++) {
-            Point position = new Point(r.nextInt(parameters.getSize()+1),r.nextInt(parameters.getSize()+1));
+            Point position = new Point(r.nextInt(parameters.getSize()),r.nextInt(parameters.getSize()));
             Agent agent = new Agent(position,parameters.getSeed()+i,environment);
             agents[i] = agent;
         }
@@ -54,6 +54,7 @@ public class SMA {
     public void init() {
         environment = new GraphicEnvironment(parameters.getSize(),parameters.getSize(),agents);
         populateEnvironment();
+        environment.initiateChunks();
         infectPatientZero();
 
         frameBuilder.addComponent(environment,FrameBuilder.TOP);
@@ -61,15 +62,17 @@ public class SMA {
         frameBuilder.buildWindow();
 
         scheduler = new Scheduler(agents, parameters.getSeed());
+        statisticsCanvas.updateValues(environment.getAgentStatus());
+        statisticsCanvas.repaint();
     }
 
-    private void updateGraphics() {
+    private void updateGraphics(){
+        statisticsCanvas.updateValues(stats);
         statisticsCanvas.repaint();
         environment.repaint();
-        statisticsCanvas.updateValues(stats);
     }
 
-    public void run() throws InterruptedException, IOException {
+    public void run() throws IOException, InterruptedException {
         while (true) {
             scheduler.nextCycle();
             stats = environment.getAgentStatus();

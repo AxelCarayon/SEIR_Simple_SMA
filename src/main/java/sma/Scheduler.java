@@ -1,7 +1,5 @@
 package sma;
 
-import view.GraphicEnvironment;
-
 import java.util.*;
 
 public class Scheduler{

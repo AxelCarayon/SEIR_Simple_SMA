@@ -5,9 +5,7 @@ import utils.Pair;
 import utils.YamlReader;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class StatisticsCanvas extends Canvas {
 
@@ -32,7 +30,6 @@ public class StatisticsCanvas extends Canvas {
     @Override
     public void paint(Graphics g) {
         int start = 0;
-
         for (int i=0 ; i <values.keySet().size();i++) {
             Agent.State state = values.keySet().stream().toList().get(i);
             Pair<Integer,Color> subpopulation = values.get(state);
