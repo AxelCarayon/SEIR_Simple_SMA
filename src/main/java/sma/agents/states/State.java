@@ -15,6 +15,6 @@ public abstract class State {
         this.agent = agent;
     }
 
-    public void onMovement(){}
+    public abstract void onMovement();
 
 }
