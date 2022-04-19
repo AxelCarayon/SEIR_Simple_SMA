@@ -5,5 +5,4 @@ nbOfPatientZero : 1
 infectionChance : 0.1 #percentage of chance that an infected agent will spread to a susceptible agent
 incubationRate : 0.5 #chance that an exposed agent become infected each cycle
 recoveryRate : 0.05 #chance that an infected agent become recovered each cycle
-
-#TODO : ajouter le nu démographie
+nbOfCycles : 100

@@ -9,6 +9,7 @@ public class Parameters {
     float infectionChance;
     float incubationRate;
     float recoveryRate;
+    int nbOfCycles;
 
     public Parameters() {
     }
@@ -61,5 +62,13 @@ public class Parameters {
 
     public void setRecoveryRate(float recoveryRate) {
         this.recoveryRate = recoveryRate;
+    }
+
+    public int getNbOfCycles() {
+        return nbOfCycles;
+    }
+
+    public void setNbOfCycles(int nbOfCycles) {
+        this.nbOfCycles = nbOfCycles;
     }
 }

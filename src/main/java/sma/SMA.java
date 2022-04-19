@@ -73,7 +73,9 @@ public class SMA {
     }
 
     public void run() throws IOException, InterruptedException {
-        while (true) {
+        int cpt = 0;
+        while (cpt < parameters.getNbOfCycles()) {
+            cpt++;
             scheduler.nextCycle();
             stats = environment.getAgentStatus();
             updateGraphics();
