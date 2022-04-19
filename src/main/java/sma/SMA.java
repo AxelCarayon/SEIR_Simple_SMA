@@ -1,12 +1,11 @@
 package sma;
 
 import models.Parameters;
-import sma.agents.Agent;
+import sma.agents.RandomWalkingAgent;
+import sma.agents.states.InfectedState;
 import sma.scheduler.FairAsynchronousScheduler;
 import sma.scheduler.FairSynchronousScheduler;
 import sma.scheduler.Scheduler;
-import utils.DataAdapter;
-import utils.Pair;
 import utils.StatsRecorder;
 import utils.YamlReader;
 import view.FrameBuilder;
@@ -22,19 +21,19 @@ public class SMA {
 
     private Parameters parameters;
     private Random r;
-    private Agent[] agents;
+    private RandomWalkingAgent[] agents;
     private GraphicEnvironment environment;
     private Scheduler scheduler;
     private StatisticsCanvas statisticsCanvas;
 
-    private HashMap<Agent.State, Pair<Integer,Color>> stats;
+    private HashMap<String,Integer> stats;
 
     private FrameBuilder frameBuilder;
 
     public SMA() {
         parameters = YamlReader.getParams();
         r = new Random(parameters.getSeed());
-        agents = new Agent[parameters.getPopulation()];
+        agents = new RandomWalkingAgent[parameters.getPopulation()];
 
         statisticsCanvas = new StatisticsCanvas(500,500);
         frameBuilder = new FrameBuilder();
@@ -44,14 +43,15 @@ public class SMA {
     private void populateEnvironment() {
         for (int i = 0; i<parameters.getPopulation();i++) {
             Point position = new Point(r.nextInt(parameters.getSize()),r.nextInt(parameters.getSize()));
-            Agent agent = new Agent(position,parameters.getSeed()+i,environment);
+            RandomWalkingAgent agent = new RandomWalkingAgent(position,parameters.getSeed()+i,environment);
             agents[i] = agent;
         }
     }
 
     private void infectPatientZero() {
         for (int i=0 ; i< parameters.getNbOfPatientZero(); i++) {
-            agents[(r.nextInt(parameters.getPopulation()))].setState(Agent.State.INFECTED);
+            var agent = agents[(r.nextInt(parameters.getPopulation()))];
+            agent.changeState(new InfectedState(agent));
         }
     }
 
@@ -87,7 +87,7 @@ public class SMA {
     private void doNextCycle() throws IOException, InterruptedException {
         scheduler.nextCycle();
         stats = environment.getAgentStatus();
-        StatsRecorder.writeToCSV(DataAdapter.adaptData(stats),"output.csv");
+        StatsRecorder.writeToCSV(stats,"output.csv");
         updateGraphics();
         Thread.sleep(100);
     }

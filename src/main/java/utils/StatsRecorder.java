@@ -10,7 +10,7 @@ public class StatsRecorder {
     private static int nbOfCycles = 0;
     private static ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-    public static void writeToCSV(HashMap<String,String> data, String outputFile) throws IOException {
+    public static void writeToCSV(HashMap<String,Integer> data, String outputFile) throws IOException {
 
         if (!outputFile.endsWith(".csv")) {
             throw new InvalidParameterException("outputFile is not a .csv file.");

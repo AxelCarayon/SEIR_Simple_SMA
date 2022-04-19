@@ -1,16 +1,16 @@
 package sma.scheduler;
 
-import sma.agents.Agent;
+import sma.agents.RandomWalkingAgent;
 
 import java.util.*;
 
 public class FairSynchronousScheduler implements Scheduler {
 
-    private Agent[] agents;
+    private RandomWalkingAgent[] agents;
     private Stack<Integer> executionOrder;
     private Random r;
 
-    public FairSynchronousScheduler(Agent[] agents, int seed) {
+    public FairSynchronousScheduler(RandomWalkingAgent[] agents, int seed) {
         this.agents = agents;
         r = new Random(seed);
         executionOrder = new Stack<>();

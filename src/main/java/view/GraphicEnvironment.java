@@ -1,10 +1,12 @@
 package view;
 
-import sma.agents.Agent;
+import sma.agents.RandomWalkingAgent;
+import sma.agents.states.*;
 import sma.environment.Environment;
 import utils.Pair;
 
 import java.awt.*;
+import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.List;
 
@@ -14,14 +16,14 @@ public class GraphicEnvironment extends Canvas implements Environment {
 
     public final static int CHUNK_SIZE = 2*RADIUS;
 
-    private Agent[] agents;
+    private RandomWalkingAgent[] agents;
 
-    private List<Agent>[][] chunks;
+    private List<RandomWalkingAgent>[][] chunks;
 
     private int windowWidth;
     private int windowHeight;
 
-    public GraphicEnvironment(int width,int height,Agent[] agents) {
+    public GraphicEnvironment(int width, int height, RandomWalkingAgent[] agents) {
         this.windowWidth = width;
         this.windowHeight = height;
         this.agents = agents;
@@ -36,14 +38,14 @@ public class GraphicEnvironment extends Canvas implements Environment {
                 chunks[i][j] = new ArrayList<>();
             }
         }
-        for (Agent agent : agents) {
+        for (RandomWalkingAgent agent : agents) {
             int x = agent.getPosition().x/CHUNK_SIZE;
             int y = agent.getPosition().y/CHUNK_SIZE;
             chunks[x][y].add(agent);
         }
     }
 
-    public void notifyNewPosition(Point oldPosition, Point newPosition, Agent agent) {
+    public void notifyNewPosition(Point oldPosition, Point newPosition, RandomWalkingAgent agent) {
         if (oldPosition.x/CHUNK_SIZE != newPosition.x/CHUNK_SIZE || oldPosition.y/CHUNK_SIZE != newPosition.y/CHUNK_SIZE) {
             chunks[oldPosition.x/CHUNK_SIZE][oldPosition.y/CHUNK_SIZE].remove(agent);
             chunks[newPosition.x/CHUNK_SIZE][newPosition.y/CHUNK_SIZE].add(agent);
@@ -70,8 +72,8 @@ public class GraphicEnvironment extends Canvas implements Environment {
     }
 
     @Override
-    public List<Agent> getNeighbors(Point p) {
-        var neighbors = new ArrayList<Agent>();
+    public List<RandomWalkingAgent> getNeighbors(Point p) {
+        var neighbors = new ArrayList<RandomWalkingAgent>();
 
         for (int i = 0; i < MAX_CHUNK; i++) {
             neighbors.addAll(getChunkNeighbors(i,p));
@@ -79,7 +81,7 @@ public class GraphicEnvironment extends Canvas implements Environment {
         return neighbors;
     }
 
-    private List<Agent> getChunkNeighbors(int relativeTo, Point p) {
+    private List<RandomWalkingAgent> getChunkNeighbors(int relativeTo, Point p) {
         var x = p.x/CHUNK_SIZE;
         var y = p.y/CHUNK_SIZE;
         switch (relativeTo) {
@@ -95,9 +97,9 @@ public class GraphicEnvironment extends Canvas implements Environment {
             default -> throw new IllegalStateException("Unexpected value: " + relativeTo);
         };
 
-        var neighbors = new ArrayList<Agent>();
+        var neighbors = new ArrayList<RandomWalkingAgent>();
         try{
-            for (Agent agent : chunks[x][y]) {
+            for (RandomWalkingAgent agent : chunks[x][y]) {
                 if (detectCollision(p, agent.getPosition())) {
                     neighbors.add(agent);
                 }
@@ -108,27 +110,19 @@ public class GraphicEnvironment extends Canvas implements Environment {
         return neighbors;
     }
 
-    public HashMap<Agent.State,Pair<Integer,Color>> getAgentStatus() {
+    public HashMap<String,Integer> getAgentStatus() {
 
-        Pair<Integer,Color> susceptible = new Pair<>(0,Color.GRAY);
-        Pair<Integer,Color> exposed = new Pair<>(0,Color.YELLOW);
-        Pair<Integer,Color> infected = new Pair<>(0,Color.RED);
-        Pair<Integer,Color> recovered = new Pair<>(0,Color.green);
+        var map = new HashMap<String,Integer>();
+        map.put(State.EXPOSED,0);
+        map.put(State.INFECTED,0);
+        map.put(State.RECOVERED,0);
+        map.put(State.SUCEPTIBLE,0);
 
-        for (Agent agent : agents) {
-            switch (agent.getState()) {
-                case SUSCEPTIBLE -> susceptible.setFirst(susceptible.getFirst()+1);
-                case EXPOSED -> exposed.setFirst(exposed.getFirst()+1);
-                case INFECTED -> infected.setFirst(infected.getFirst()+1);
-                case RECOVERED -> recovered.setFirst(recovered.getFirst()+1);
-            }
+        for (RandomWalkingAgent agent : agents) {
+            String state = agent.getState().toString();
+            map.put(state,map.get(state)+1);
         }
-        var result = new HashMap<Agent.State,Pair<Integer,Color>>();
-        result.put(Agent.State.SUSCEPTIBLE,susceptible);
-        result.put(Agent.State.EXPOSED,exposed);
-        result.put(Agent.State.INFECTED,infected);
-        result.put(Agent.State.RECOVERED,recovered);
-        return result;
+        return map;
     }
 
     private Boolean detectCollision(Point pos1, Point pos2) {
@@ -138,12 +132,13 @@ public class GraphicEnvironment extends Canvas implements Environment {
         return distanceSquared < (2*RADIUS) * (2*RADIUS);
     }
 
-    private void colorAgent(Graphics g,Agent a) {
-        switch (a.getState()) {
-            case SUSCEPTIBLE -> g.setColor(Color.GRAY);
-            case EXPOSED -> g.setColor(Color.YELLOW);
-            case INFECTED -> g.setColor(Color.RED);
-            case RECOVERED -> g.setColor(Color.GREEN);
+    private void colorAgent(Graphics g, RandomWalkingAgent a) {
+        var state = a.getState();
+        switch (state.toString()) {
+            case State.SUCEPTIBLE-> g.setColor(Color.GRAY);
+            case State.EXPOSED -> g.setColor(Color.YELLOW);
+            case State.INFECTED -> g.setColor(Color.RED);
+            case State.RECOVERED -> g.setColor(Color.GREEN);
         }
     }
 }

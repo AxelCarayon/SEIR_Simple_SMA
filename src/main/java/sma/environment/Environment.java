@@ -1,6 +1,6 @@
 package sma.environment;
 
-import sma.agents.Agent;
+import sma.agents.RandomWalkingAgent;
 
 import java.awt.Point;
 import java.util.List;
@@ -17,5 +17,5 @@ public interface Environment {
     int DOWN_RIGHT = 8;
     int MAX_CHUNK = 9;
 
-    List<Agent> getNeighbors(Point position);
+    List<RandomWalkingAgent> getNeighbors(Point position);
 }
