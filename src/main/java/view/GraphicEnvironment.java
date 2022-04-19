@@ -1,14 +1,14 @@
 package view;
 
-import sma.Agent;
-import sma.IEnvironment;
+import sma.agents.Agent;
+import sma.environment.Environment;
 import utils.Pair;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class GraphicEnvironment extends Canvas implements IEnvironment {
+public class GraphicEnvironment extends Canvas implements Environment {
 
     public final static int RADIUS = 10;
 

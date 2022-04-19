@@ -1,9 +1,11 @@
-package sma;
+package sma.environment;
+
+import sma.agents.Agent;
 
 import java.awt.Point;
 import java.util.List;
 
-public interface IEnvironment {
+public interface Environment {
     int LEFT = 0;
     int RIGHT = 1;
     int UP = 2;

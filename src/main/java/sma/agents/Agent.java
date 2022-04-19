@@ -1,5 +1,6 @@
-package sma;
+package sma.agents;
 
+import sma.environment.Environment;
 import utils.YamlReader;
 import view.GraphicEnvironment;
 
@@ -23,6 +24,7 @@ public class Agent {
     private Boolean exposedThisCycle;
     private Boolean infectedThisCycle;
 
+
     public Agent(Point position, int seed, GraphicEnvironment environment) {
         this.position = position;
         this.state = State.SUSCEPTIBLE;
@@ -34,10 +36,10 @@ public class Agent {
         int move = r.nextInt(4);
 
         Point newPosition = switch (move) {
-            case IEnvironment.LEFT -> new Point(position.x-environment.RADIUS,position.y);
-            case IEnvironment.RIGHT -> new Point(position.x+environment.RADIUS,position.y);
-            case IEnvironment.UP -> new Point(position.x,position.y-environment.RADIUS);
-            case IEnvironment.DOWN -> new Point(position.x,position.y+environment.RADIUS);
+            case Environment.LEFT -> new Point(position.x-environment.RADIUS,position.y);
+            case Environment.RIGHT -> new Point(position.x+environment.RADIUS,position.y);
+            case Environment.UP -> new Point(position.x,position.y-environment.RADIUS);
+            case Environment.DOWN -> new Point(position.x,position.y+environment.RADIUS);
             default -> throw new IllegalStateException("Unexpected value: " + move);
         };
         if (newPosition.x <= environment.getWidth()-1 && newPosition.x >= 0 && newPosition.y <= environment.getHeight()-1 && newPosition.y >=0 ) {

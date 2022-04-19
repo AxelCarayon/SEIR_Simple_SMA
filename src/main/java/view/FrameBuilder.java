@@ -14,9 +14,6 @@ public class FrameBuilder {
     public final static int TOP = 2;
     public final static int BOTTOM = 3;
 
-    private int frameWidth;
-    private int frameHeight;
-
     private List<Pair<Component,Integer>> components;
 
     public FrameBuilder() {
@@ -25,8 +22,6 @@ public class FrameBuilder {
 
     public void resetWindow() {
         components = new ArrayList<>();
-        frameWidth = 0;
-        frameHeight = 0;
     }
 
 

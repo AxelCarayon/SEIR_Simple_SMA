@@ -1,6 +1,10 @@
 package sma;
 
 import models.Parameters;
+import sma.agents.Agent;
+import sma.scheduler.FairAsynchronousScheduler;
+import sma.scheduler.FairSynchronousScheduler;
+import sma.scheduler.Scheduler;
 import utils.DataAdapter;
 import utils.Pair;
 import utils.StatsRecorder;
@@ -51,6 +55,14 @@ public class SMA {
         }
     }
 
+    private void initScheduler() {
+        if (parameters.isSynchronousMode()) {
+            scheduler = new FairSynchronousScheduler(agents, parameters.getSeed());
+        } else {
+            scheduler = new FairAsynchronousScheduler(agents);
+        }
+    }
+
     public void init() {
         environment = new GraphicEnvironment(parameters.getSize(),parameters.getSize(),agents);
         populateEnvironment();
@@ -61,26 +73,37 @@ public class SMA {
         frameBuilder.addComponent(statisticsCanvas,FrameBuilder.RIGHT);
         frameBuilder.buildWindow();
 
-        scheduler = new Scheduler(agents, parameters.getSeed());
+        initScheduler();
         statisticsCanvas.updateValues(environment.getAgentStatus());
         statisticsCanvas.repaint();
     }
 
     private void updateGraphics(){
+        environment.repaint();
         statisticsCanvas.updateValues(stats);
         statisticsCanvas.repaint();
-        environment.repaint();
+    }
+
+    private void doNextCycle() throws IOException, InterruptedException {
+        scheduler.nextCycle();
+        stats = environment.getAgentStatus();
+        StatsRecorder.writeToCSV(DataAdapter.adaptData(stats),"output.csv");
+        updateGraphics();
+        Thread.sleep(100);
     }
 
     public void run() throws IOException, InterruptedException {
-        int cpt = 0;
-        while (cpt < parameters.getNbOfCycles()) {
-            cpt++;
-            scheduler.nextCycle();
-            stats = environment.getAgentStatus();
-            updateGraphics();
-            StatsRecorder.writeToCSV(DataAdapter.adaptData(stats),"output.csv");
-            Thread.sleep(100);
+
+        if (parameters.getNbOfCycles() <0) {
+            while (true) {
+                doNextCycle();
+            }
+        } else {
+            int cpt = 0;
+            while (cpt < parameters.getNbOfCycles()) {
+                doNextCycle();
+                cpt++;
+            }
         }
     }
 

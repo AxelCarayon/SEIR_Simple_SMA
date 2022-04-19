@@ -1,6 +1,6 @@
 package view;
 
-import sma.Agent;
+import sma.agents.Agent;
 import utils.Pair;
 import utils.YamlReader;
 

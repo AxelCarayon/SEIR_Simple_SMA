@@ -1,6 +1,6 @@
 package utils;
 
-import sma.Agent;
+import sma.agents.Agent;
 
 import java.awt.*;
 import java.util.HashMap;
