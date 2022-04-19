@@ -10,7 +10,7 @@ public class RecoveredState extends State{
 
     @Override
     public void onMovement() {
-        agent.move();
+
     }
 
     @Override

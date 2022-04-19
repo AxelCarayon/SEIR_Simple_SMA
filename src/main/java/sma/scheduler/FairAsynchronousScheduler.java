@@ -20,7 +20,7 @@ public class FairAsynchronousScheduler implements Scheduler{
 
     public void nextCycle() {
 
-        List<Future<RandomWalkingAgent>> results = queue.parallelStream().map(agent -> executor.submit(() -> {agent.wakeUp(); return agent;})).collect(Collectors.toList());
+        List<Future<RandomWalkingAgent>> results = queue.parallelStream().map(agent -> executor.submit(() -> {agent.move(); return agent;})).collect(Collectors.toList());
         Function<Future<RandomWalkingAgent>, RandomWalkingAgent> futureTreatment = futureAgent -> {
             try {
                 return futureAgent.get();

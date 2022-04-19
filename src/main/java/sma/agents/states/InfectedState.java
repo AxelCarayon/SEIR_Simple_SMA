@@ -10,8 +10,7 @@ public class InfectedState extends State{
 
     @Override
     public void onMovement() {
-        agent.move();
-        if (agent.recover()) {
+        if (agent.isRecovered()) {
             agent.changeState(new RecoveredState(agent));
         }
     }

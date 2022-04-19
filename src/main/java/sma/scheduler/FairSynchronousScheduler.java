@@ -25,7 +25,7 @@ public class FairSynchronousScheduler implements Scheduler {
 
     private void wakeAgents() {
         while (!executionOrder.isEmpty()) {
-            agents[(executionOrder.pop())].wakeUp();
+            agents[(executionOrder.pop())].move();
 
         }
     }

@@ -15,11 +15,7 @@ public class RandomWalkingAgent implements Agent {
     private Point position;
     private Random r;
     private GraphicEnvironment environment;
-
     private State state;
-    private Boolean exposedThisCycle;
-    private Boolean infectedThisCycle;
-
 
     public RandomWalkingAgent(Point position, int seed, GraphicEnvironment environment) {
         this.position = position;
@@ -29,8 +25,9 @@ public class RandomWalkingAgent implements Agent {
     }
 
     public void move() {
+        state.onMovement();
+        
         int move = r.nextInt(4);
-
         Point newPosition = switch (move) {
             case Environment.LEFT -> new Point(position.x-environment.RADIUS,position.y);
             case Environment.RIGHT -> new Point(position.x+environment.RADIUS,position.y);
@@ -45,12 +42,10 @@ public class RandomWalkingAgent implements Agent {
     }
 
     @Override
-    public void changeState(State state) {
-        this.state = state;
-    }
+    public void changeState(State state) { this.state = state; }
 
     @Override
-    public boolean contact() {
+    public boolean isExposed() {
         boolean isExposed = false;
         for (RandomWalkingAgent neighbor: environment.getNeighbors(position)) {
             if (neighbor.getState() instanceof InfectedState) {
@@ -64,7 +59,7 @@ public class RandomWalkingAgent implements Agent {
     }
 
     @Override
-    public boolean incubate() {
+    public boolean isInfected() {
         boolean isSick = false;
         int roll = r.nextInt(100);
         if (roll <= YamlReader.getParams().getIncubationRate()*100) {
@@ -74,7 +69,7 @@ public class RandomWalkingAgent implements Agent {
     }
 
     @Override
-    public boolean recover() {
+    public boolean isRecovered() {
         boolean isHealed = false;
         int roll = r.nextInt(100);
         if (roll <= YamlReader.getParams().getRecoveryRate()*100) {
@@ -83,18 +78,8 @@ public class RandomWalkingAgent implements Agent {
         return isHealed;
     }
 
-    public State getState() {
-        return this.state;
-    }
+    public State getState() { return this.state; }
 
-    public void wakeUp() {
-        exposedThisCycle = false;
-        infectedThisCycle = false;
-        state.onMovement();
-    }
-
-    public Point getPosition() {
-        return position;
-    }
+    public Point getPosition() { return position; }
 
 }

@@ -10,8 +10,7 @@ public class SuceptibleState extends State{
 
     @Override
     public void onMovement() {
-        agent.move();
-        if (agent.contact()) {
+        if (agent.isExposed()) {
             agent.changeState(new ExposedState(agent));
         }
     }

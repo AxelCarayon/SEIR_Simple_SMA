@@ -10,8 +10,7 @@ public class ExposedState extends State{
 
     @Override
     public void onMovement() {
-        agent.move();
-        if (agent.incubate()) {
+        if (agent.isInfected()) {
             agent.changeState(new InfectedState(agent));
         }
     }
