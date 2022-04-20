@@ -3,13 +3,14 @@ package sma;
 import models.Parameters;
 import sma.agents.RandomWalkingAgent;
 import sma.agents.states.InfectedState;
+import sma.environment.SquaredChunksEnvironment;
 import sma.scheduler.FairAsynchronousScheduler;
 import sma.scheduler.FairSynchronousScheduler;
 import sma.scheduler.Scheduler;
 import utils.StatsRecorder;
 import utils.YamlReader;
+import view.DisplaySquaredEnvironment;
 import view.FrameBuilder;
-import view.GraphicEnvironment;
 import view.StatisticsCanvas;
 
 import java.awt.*;
@@ -22,9 +23,10 @@ public class SMA {
     private Parameters parameters;
     private Random r;
     private RandomWalkingAgent[] agents;
-    private GraphicEnvironment environment;
+    private SquaredChunksEnvironment environment;
     private Scheduler scheduler;
     private StatisticsCanvas statisticsCanvas;
+    private DisplaySquaredEnvironment display;
 
     private HashMap<String,Integer> stats;
 
@@ -64,12 +66,13 @@ public class SMA {
     }
 
     public void init() {
-        environment = new GraphicEnvironment(parameters.getSize(),parameters.getSize(),agents);
+        environment = new SquaredChunksEnvironment(parameters.getSize(),agents);
         populateEnvironment();
         environment.initiateChunks();
         infectPatientZero();
+        display = new DisplaySquaredEnvironment(environment,agents);
 
-        frameBuilder.addComponent(environment,FrameBuilder.TOP);
+        frameBuilder.addComponent(display,FrameBuilder.TOP);
         frameBuilder.addComponent(statisticsCanvas,FrameBuilder.RIGHT);
         frameBuilder.buildWindow();
 
@@ -79,7 +82,7 @@ public class SMA {
     }
 
     private void updateGraphics(){
-        environment.repaint();
+        display.repaint();
         statisticsCanvas.updateValues(stats);
         statisticsCanvas.repaint();
     }

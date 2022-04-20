@@ -4,8 +4,8 @@ import sma.agents.states.InfectedState;
 import sma.agents.states.State;
 import sma.agents.states.SuceptibleState;
 import sma.environment.Environment;
+import sma.environment.SquaredChunksEnvironment;
 import utils.YamlReader;
-import view.GraphicEnvironment;
 
 import java.awt.Point;
 import java.util.Random;
@@ -14,10 +14,10 @@ public class RandomWalkingAgent implements Agent {
 
     private Point position;
     private Random r;
-    private GraphicEnvironment environment;
+    private SquaredChunksEnvironment environment;
     private State state;
 
-    public RandomWalkingAgent(Point position, int seed, GraphicEnvironment environment) {
+    public RandomWalkingAgent(Point position, int seed, SquaredChunksEnvironment environment) {
         this.position = position;
         this.state = new SuceptibleState(this);
         this.environment = environment;
@@ -26,7 +26,6 @@ public class RandomWalkingAgent implements Agent {
 
     public void move() {
         state.onMovement();
-        
         int move = r.nextInt(4);
         Point newPosition = switch (move) {
             case Environment.LEFT -> new Point(position.x-environment.RADIUS,position.y);
@@ -35,7 +34,7 @@ public class RandomWalkingAgent implements Agent {
             case Environment.DOWN -> new Point(position.x,position.y+environment.RADIUS);
             default -> throw new IllegalStateException("Unexpected value: " + move);
         };
-        if (newPosition.x <= environment.getWidth()-1 && newPosition.x >= 0 && newPosition.y <= environment.getHeight()-1 && newPosition.y >=0 ) {
+        if (newPosition.x <= environment.size-1 && newPosition.x >= 0 && newPosition.y <= environment.size-1 && newPosition.y >=0 ) {
             environment.notifyNewPosition(position,newPosition,this);
             position = newPosition;
         }
@@ -47,7 +46,7 @@ public class RandomWalkingAgent implements Agent {
     @Override
     public boolean isExposed() {
         boolean isExposed = false;
-        for (RandomWalkingAgent neighbor: environment.getNeighbors(position)) {
+        for (Agent neighbor: environment.getNeighbors(position)) {
             if (neighbor.getState() instanceof InfectedState) {
                 int roll = r.nextInt(100);
                 if (roll <= YamlReader.getParams().getInfectionRate()*100) {
@@ -88,8 +87,10 @@ public class RandomWalkingAgent implements Agent {
         return hasLostImmunity;
     }
 
+    @Override
     public State getState() { return this.state; }
 
+    @Override
     public Point getPosition() { return position; }
 
 }

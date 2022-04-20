@@ -28,16 +28,22 @@ public class FrameBuilder {
     }
 
 
-    public void addComponent(JComponent c,int position) {
-        var pair = new Pair<>(c,position);
-        System.out.println(c.getWidth());
-        System.out.println(c.getHeight());
-        if (windowWidth < c.getWidth()) {
-            windowWidth = c.getWidth();
+    public void addComponent(JComponent c,int p) {
+        var pair = new Pair<>(c,p);
+
+        switch (p) {
+            case LEFT,RIGHT -> {
+                windowWidth+=c.getWidth();
+                if (c.getHeight()>windowHeight)
+                    windowHeight = c.getHeight();
+            }
+            case TOP,BOTTOM -> {
+                windowHeight+=c.getHeight();
+                if (c.getWidth()>windowWidth)
+                    windowWidth = c.getWidth();
+            }
         }
-        if (windowHeight < c.getHeight()) {
-            windowHeight = c.getHeight();
-        }
+
         components.add(pair);
     }
 
@@ -45,8 +51,6 @@ public class FrameBuilder {
         JFrame frame = new JFrame();
         frame.setLayout(new java.awt.GridLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame.setSize(new Dimension(1000,500));
 
         for (Pair<JComponent,Integer> pair : components ) {
             switch (pair.getSecond()) {
@@ -57,7 +61,7 @@ public class FrameBuilder {
                 default -> throw new IllegalStateException("Wrong position value");
             }
         }
-        //frame.pack();
+        frame.setSize(windowWidth,windowHeight);
         frame.setResizable(false);
         frame.setVisible(true);
         return frame;

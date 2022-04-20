@@ -1,5 +1,6 @@
 package sma.scheduler;
 
+import sma.agents.Agent;
 import sma.agents.RandomWalkingAgent;
 
 import java.util.Arrays;
@@ -12,28 +13,22 @@ import java.util.stream.Collectors;
 public class FairAsynchronousScheduler implements Scheduler{
 
     private ExecutorService executor = Executors.newSingleThreadExecutor();
-    private Queue<RandomWalkingAgent> queue;
+    private Queue<Agent> queue;
 
-    public FairAsynchronousScheduler(RandomWalkingAgent[] agents) {
+    public FairAsynchronousScheduler(Agent[] agents) {
         this.queue = new ConcurrentLinkedQueue<>(Arrays.stream(agents).toList());
     }
 
     public void nextCycle() {
-
-        List<Future<RandomWalkingAgent>> results = queue.parallelStream().map(agent -> executor.submit(() -> {agent.move(); return agent;})).collect(Collectors.toList());
-        Function<Future<RandomWalkingAgent>, RandomWalkingAgent> futureTreatment = futureAgent -> {
+        List<Future<Agent>> results = queue.parallelStream().map(agent -> executor.submit(() -> {agent.move(); return agent;})).toList();
+        Function<Future<Agent>, Agent> futureTreatment = futureAgent -> {
             try {
                 return futureAgent.get();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
             return null;
         };
-
-        List<RandomWalkingAgent> nextQueue = results.parallelStream().map(futureTreatment).collect(Collectors.toList());
-        queue = new ConcurrentLinkedQueue<>(nextQueue);
+        queue = results.parallelStream().map(futureTreatment).collect(Collectors.toCollection(ConcurrentLinkedQueue::new));
     }
-
 }

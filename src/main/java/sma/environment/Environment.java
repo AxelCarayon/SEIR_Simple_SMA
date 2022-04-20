@@ -1,8 +1,9 @@
 package sma.environment;
 
-import sma.agents.RandomWalkingAgent;
+import sma.agents.Agent;
 
 import java.awt.Point;
+import java.util.HashMap;
 import java.util.List;
 
 public interface Environment {
@@ -17,5 +18,7 @@ public interface Environment {
     int DOWN_RIGHT = 8;
     int MAX_CHUNK = 9;
 
-    List<RandomWalkingAgent> getNeighbors(Point position);
+    List<Agent> getNeighbors(Point position);
+    void notifyNewPosition(Point oldPosition, Point newPosition, Agent agent);
+    HashMap<String,Integer> getAgentStatus();
 }
