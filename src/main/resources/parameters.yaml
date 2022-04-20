@@ -7,5 +7,5 @@ incubationRate : 0.1 #chance that an exposed agent become infected each cycle
 recoveryRate : 0.05 #chance that an infected agent become recovered each cycle
 looseImmunityRate : 0.05 #chance that a recovered agent become suceptible again
 nbOfCycles : -1 #if the number is negative, will run endlessly
-timeBetweenCycles : 100 #in milliseconds, 0 or lower will run as many cycles as possible
+timeBetweenCycles : 50 #in milliseconds, 0 or lower will run cycles as fast as possible
 synchronousMode : false #if true, will wake synchronously the agents in a pseudo-random order based on the given seed otherwise will wake up the agents asynchronously
