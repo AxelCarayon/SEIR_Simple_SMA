@@ -6,9 +6,10 @@ public class Parameters {
     private int population;
     private int size;
     private int nbOfPatientZero;
-    private float infectionChance;
+    private float infectionRate;
     private float incubationRate;
     private float recoveryRate;
+    private float looseImmunityRate;
     private int nbOfCycles;
     private boolean synchronousMode;
 
@@ -31,9 +32,9 @@ public class Parameters {
 
     public void setSize(int size) {this.size = size;}
 
-    public float getInfectionChance() { return infectionChance; }
+    public float getInfectionRate() { return infectionRate; }
 
-    public void setInfectionChance(float infectionChance) {this.infectionChance = infectionChance;}
+    public void setInfectionRate(float infectionRate) {this.infectionRate = infectionRate;}
 
     public float getIncubationRate() {return incubationRate;}
 
@@ -42,6 +43,10 @@ public class Parameters {
     public float getRecoveryRate() {return recoveryRate;}
 
     public void setRecoveryRate(float recoveryRate) {this.recoveryRate = recoveryRate;}
+
+    public float getLooseImmunityRate() { return looseImmunityRate; }
+
+    public void setLooseImmunityRate(float looseImmunityRate) { this.looseImmunityRate = looseImmunityRate; }
 
     public int getNbOfCycles() {return nbOfCycles;}
 

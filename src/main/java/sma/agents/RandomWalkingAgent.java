@@ -50,7 +50,7 @@ public class RandomWalkingAgent implements Agent {
         for (RandomWalkingAgent neighbor: environment.getNeighbors(position)) {
             if (neighbor.getState() instanceof InfectedState) {
                 int roll = r.nextInt(100);
-                if (roll <= YamlReader.getParams().getInfectionChance()*100) {
+                if (roll <= YamlReader.getParams().getInfectionRate()*100) {
                     isExposed = true;
                 }
             }
@@ -76,6 +76,16 @@ public class RandomWalkingAgent implements Agent {
             isHealed = true;
         }
         return isHealed;
+    }
+
+    @Override
+    public boolean hasLostImmunity() {
+        boolean hasLostImmunity = false;
+        int roll = r.nextInt(100);
+        if (roll <= YamlReader.getParams().getLooseImmunityRate()*100) {
+            hasLostImmunity = true;
+        }
+        return hasLostImmunity;
     }
 
     public State getState() { return this.state; }

@@ -10,11 +10,13 @@ public class RecoveredState extends State{
 
     @Override
     public void onMovement() {
-
+        if (agent.hasLostImmunity()) {
+            agent.changeState(new SuceptibleState(agent));
+        }
     }
 
     @Override
     public String toString() {
-        return "RECOVERED";
+        return RECOVERED;
     }
 }

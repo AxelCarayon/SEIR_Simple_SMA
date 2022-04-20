@@ -1,14 +1,13 @@
 package view;
 
-import sma.agents.RandomWalkingAgent;
 import sma.agents.states.State;
-import utils.Pair;
 import utils.YamlReader;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 
-public class StatisticsCanvas extends Canvas {
+public class StatisticsCanvas extends JPanel {
 
     private int canvasWidth;
     private int canvasHeight;
@@ -16,6 +15,7 @@ public class StatisticsCanvas extends Canvas {
     private int total;
 
     public StatisticsCanvas(int width,int height) {
+        this.setDoubleBuffered(false);
         canvasHeight = height;
         canvasWidth = width;
         values = new HashMap<>();
@@ -41,10 +41,7 @@ public class StatisticsCanvas extends Canvas {
     @Override
     public void paint(Graphics g) {
         int start = 0;
-
-        for (String state : values.keySet()) {
-
-        }
+        g.clearRect(0,0,getWidth(),getHeight());
         for (int i=0 ; i <values.keySet().size();i++) {
             String state = (String) values.keySet().toArray()[i];
             int value = values.get(state);

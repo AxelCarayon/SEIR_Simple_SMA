@@ -17,6 +17,6 @@ public class ExposedState extends State{
 
     @Override
     public String toString() {
-        return "EXPOSED";
+        return EXPOSED;
     }
 }

@@ -17,6 +17,6 @@ public class InfectedState extends State{
 
     @Override
     public String toString() {
-        return "INFECTED";
+        return INFECTED;
     }
 }

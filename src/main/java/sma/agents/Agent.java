@@ -8,5 +8,6 @@ public interface Agent {
     boolean isExposed();
     boolean isInfected();
     boolean isRecovered();
+    boolean hasLostImmunity();
     void move();
 }

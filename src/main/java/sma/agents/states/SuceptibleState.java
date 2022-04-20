@@ -2,6 +2,8 @@ package sma.agents.states;
 
 import sma.agents.Agent;
 
+import java.awt.*;
+
 public class SuceptibleState extends State{
 
     public SuceptibleState(Agent agent) {
@@ -17,6 +19,6 @@ public class SuceptibleState extends State{
 
     @Override
     public String toString() {
-        return "SUCEPTIBLE";
+        return SUCEPTIBLE;
     }
 }

@@ -3,14 +3,13 @@ package view;
 import sma.agents.RandomWalkingAgent;
 import sma.agents.states.*;
 import sma.environment.Environment;
-import utils.Pair;
 
+import javax.swing.*;
 import java.awt.*;
-import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.List;
 
-public class GraphicEnvironment extends Canvas implements Environment {
+public class GraphicEnvironment extends JPanel implements Environment {
 
     public final static int RADIUS = 10;
 
@@ -24,6 +23,7 @@ public class GraphicEnvironment extends Canvas implements Environment {
     private int windowHeight;
 
     public GraphicEnvironment(int width, int height, RandomWalkingAgent[] agents) {
+        this.setDoubleBuffered(true);
         this.windowWidth = width;
         this.windowHeight = height;
         this.agents = agents;

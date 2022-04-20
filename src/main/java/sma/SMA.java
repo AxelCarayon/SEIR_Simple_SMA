@@ -89,7 +89,7 @@ public class SMA {
         stats = environment.getAgentStatus();
         StatsRecorder.writeToCSV(stats,"output.csv");
         updateGraphics();
-        Thread.sleep(100);
+        //Thread.sleep(100);
     }
 
     public void run() throws IOException, InterruptedException {
