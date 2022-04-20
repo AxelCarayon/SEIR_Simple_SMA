@@ -92,7 +92,9 @@ public class SMA {
         stats = environment.getAgentStatus();
         StatsRecorder.writeToCSV(stats,"output.csv");
         updateGraphics();
-        //Thread.sleep(100);
+        if (parameters.getTimeBetweenCycles() > 0) {
+            Thread.sleep(parameters.getTimeBetweenCycles());
+        }
     }
 
     public void run() throws IOException, InterruptedException {

@@ -11,6 +11,7 @@ public class Parameters {
     private float recoveryRate;
     private float looseImmunityRate;
     private int nbOfCycles;
+    private int timeBetweenCycles;
     private boolean synchronousMode;
 
     public Parameters() {
@@ -55,4 +56,8 @@ public class Parameters {
     public boolean isSynchronousMode() {return synchronousMode;}
 
     public void setSynchronousMode(boolean synchronousMode) {this.synchronousMode = synchronousMode;}
+
+    public int getTimeBetweenCycles() { return timeBetweenCycles; }
+
+    public void setTimeBetweenCycles(int timeBetweenCycles) { this.timeBetweenCycles = timeBetweenCycles; }
 }
