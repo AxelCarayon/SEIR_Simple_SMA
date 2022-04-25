@@ -28,6 +28,6 @@ def showDiagram(data):
     plt.show()
     
 
-data = readCSV("output.csv")
+data = readCSV("src/main/resources/output.csv")
 
 showDiagram(data)

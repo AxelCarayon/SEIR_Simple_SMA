@@ -90,7 +90,7 @@ public class SMA {
     private void doNextCycle() throws IOException, InterruptedException {
         scheduler.nextCycle();
         stats = environment.getAgentStatus();
-        StatsRecorder.writeToCSV(stats,"output.csv");
+        StatsRecorder.writeToCSV(stats,"src/main/resources/output.csv");
         updateGraphics();
         if (parameters.getTimeBetweenCycles() > 0) {
             Thread.sleep(parameters.getTimeBetweenCycles());

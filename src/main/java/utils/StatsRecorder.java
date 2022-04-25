@@ -8,7 +8,6 @@ import java.util.List;
 public class StatsRecorder {
 
     private static int nbOfCycles = 0;
-    private static ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
     public static void writeToCSV(HashMap<String,Integer> data, String outputFile) throws IOException {
 
