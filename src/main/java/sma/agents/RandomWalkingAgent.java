@@ -48,7 +48,7 @@ public class RandomWalkingAgent implements Agent {
         boolean isExposed = false;
         for (Agent neighbor: environment.getNeighbors(position)) {
             if (neighbor.getState() instanceof InfectedState) {
-                int roll = r.nextInt(100);
+                int roll = r.nextInt(100)+1;
                 if (roll <= YamlReader.getParams().getInfectionRate()*100) {
                     isExposed = true;
                 }
@@ -60,7 +60,7 @@ public class RandomWalkingAgent implements Agent {
     @Override
     public boolean isInfected() {
         boolean isSick = false;
-        int roll = r.nextInt(100);
+        int roll = r.nextInt(100)+1;
         if (roll <= YamlReader.getParams().getIncubationRate()*100) {
             isSick = true;
         }
@@ -70,7 +70,7 @@ public class RandomWalkingAgent implements Agent {
     @Override
     public boolean isRecovered() {
         boolean isHealed = false;
-        int roll = r.nextInt(100);
+        int roll = r.nextInt(100)+1;
         if (roll <= YamlReader.getParams().getRecoveryRate()*100) {
             isHealed = true;
         }
@@ -80,7 +80,7 @@ public class RandomWalkingAgent implements Agent {
     @Override
     public boolean hasLostImmunity() {
         boolean hasLostImmunity = false;
-        int roll = r.nextInt(100);
+        int roll = r.nextInt(100)+1;
         if (roll <= YamlReader.getParams().getLooseImmunityRate()*100) {
             hasLostImmunity = true;
         }

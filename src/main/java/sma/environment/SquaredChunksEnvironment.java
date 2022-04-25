@@ -58,8 +58,8 @@ public class SquaredChunksEnvironment implements Environment {
     }
 
     private List<Agent> getChunkNeighbors(int relativeTo, Point p) {
-        Point chunk = new Point(p.x/CHUNK_SIZE,p.y/CHUNK_SIZE);
         Point newPosition = getRelativePoint(relativeTo,p);
+        Point chunk = new Point(newPosition.x/CHUNK_SIZE,newPosition.y/CHUNK_SIZE);
         var neighbors = new ArrayList<Agent>();
         try{
             for (Agent agent : chunks[chunk.x][chunk.y]) {

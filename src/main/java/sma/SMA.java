@@ -110,6 +110,8 @@ public class SMA {
                 cpt++;
             }
         }
+        System.out.println("Simulation done !");
+        System.exit(0);
     }
 
     public static void main(String[] args) throws InterruptedException, IOException {
