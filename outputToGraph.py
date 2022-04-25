@@ -26,8 +26,13 @@ def showDiagram(data):
     plt.ylabel('Peoples')
     plt.legend()
     plt.show()
+
+def runJavaJar(fileName):
+    import subprocess
+    subprocess.call(['java', '-jar', fileName])
     
+runJavaJar('out/artifacts/SMA_SEIR_jar/SMA-SEIR.jar')
 
-data = readCSV("src/main/resources/output.csv")
+# data = readCSV("src/main/resources/output.csv")
 
-showDiagram(data)
+# showDiagram(data)

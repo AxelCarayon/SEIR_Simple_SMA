@@ -6,6 +6,7 @@ infectionRate : 0.3 #chance that an infected agent will spread to a susceptible 
 incubationRate : 0.1 #chance that an exposed agent become infected each cycle
 recoveryRate : 0.3 #chance that an infected agent become recovered each cycle
 looseImmunityRate : 0.05 #chance that a recovered agent become suceptible again
-nbOfCycles : -1 #if the number is negative, will run endlessly
+nbOfCycles : 10000 #if the number is negative, will run endlessly
 timeBetweenCycles : 0 #in milliseconds, 0 or lower will run cycles as fast as possible
 synchronousMode : false #if true, will wake synchronously the agents in a pseudo-random order based on the given seed otherwise will wake up the agents asynchronously
+graphicalMode : false #if false, will run without graphical interface

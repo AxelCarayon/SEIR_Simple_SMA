@@ -13,6 +13,7 @@ public class Parameters {
     private int nbOfCycles;
     private int timeBetweenCycles;
     private boolean synchronousMode;
+    private boolean graphicalMode;
 
     public Parameters() {
     }
@@ -60,4 +61,8 @@ public class Parameters {
     public int getTimeBetweenCycles() { return timeBetweenCycles; }
 
     public void setTimeBetweenCycles(int timeBetweenCycles) { this.timeBetweenCycles = timeBetweenCycles; }
+
+    public boolean isGraphicalMode() { return graphicalMode; }
+
+    public void setGraphicalMode(boolean graphicalMode) { this.graphicalMode = graphicalMode; }
 }
