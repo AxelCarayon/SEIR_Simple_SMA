@@ -23,7 +23,7 @@
 target
 
 src/main/resources/output.csv
-srtc/main/resources/output.png
+src/main/resources/output.png
 src/main/resources/pythonOutput/*.csv
 src/main/resources/pythonOutput/*.png
 
