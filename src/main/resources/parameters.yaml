@@ -1,12 +1,12 @@
-seed : 120
-population : 1000 #number of agents
-size : 500 #size of the world in pixels
-nbOfPatientZero : 1
-infectionRate : 0.3 #chance that an infected agent will spread to a susceptible agent
-incubationRate : 0.1 #chance that an exposed agent become infected each cycle
-recoveryRate : 0.3 #chance that an infected agent become recovered each cycle
-looseImmunityRate : 0.05 #chance that a recovered agent become suceptible again
-nbOfCycles : 10000 #if the number is negative, will run endlessly
-timeBetweenCycles : 0 #in milliseconds, 0 or lower will run cycles as fast as possible
-synchronousMode : false #if true, will wake synchronously the agents in a pseudo-random order based on the given seed otherwise will wake up the agents asynchronously
-graphicalMode : false #if false, will run without graphical interface
+graphicalMode: true
+incubationRate: 0.3
+infectionRate: 0.035
+looseImmunityRate: 0.09
+recoveryRate: 0.6
+nbOfCycles: 2000
+nbOfPatientZero: 10
+population: 5000
+seed: 120
+size: 500
+synchronousMode: false
+timeBetweenCycles: 0

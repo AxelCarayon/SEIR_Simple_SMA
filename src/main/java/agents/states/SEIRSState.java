@@ -1,17 +1,17 @@
-package sma.agents.states;
+package agents.states;
 
-import sma.agents.Agent;
+import agents.SEIRSAgent;
 
-public abstract class State {
+public abstract class SEIRSState {
 
     public final static String EXPOSED = "EXPOSED";
     public final static String INFECTED = "INFECTED";
     public final static String SUCEPTIBLE = "SUCEPTIBLE";
     public final static String RECOVERED = "RECOVERED";
 
-    protected Agent agent;
+    protected final agents.SEIRSAgent agent;
 
-    State(Agent agent) {
+    SEIRSState(SEIRSAgent agent) {
         this.agent = agent;
     }
 

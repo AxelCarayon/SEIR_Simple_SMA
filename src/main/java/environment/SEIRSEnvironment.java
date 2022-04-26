@@ -1,23 +1,25 @@
-package sma.environment;
+package environment;
 
-import sma.agents.Agent;
-import sma.agents.states.State;
+import agents.Agent;
+import agents.SEIRSAgent;
+import agents.states.SEIRSState;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SquaredChunksEnvironment implements Environment {
+@SuppressWarnings("unchecked")
+public class SEIRSEnvironment implements SquareEnvironment2D {
 
     public final static int RADIUS = 10;
     public final static int CHUNK_SIZE = 2*RADIUS;
 
-    public int size;
-    private Agent[] agents;
-    private List<Agent>[][] chunks;
+    public final int size;
+    private final SEIRSAgent[] agents;
+    private List<SEIRSAgent>[][] chunks;
 
-    public SquaredChunksEnvironment(int size, Agent[] agents) {
+    public SEIRSEnvironment(int size, SEIRSAgent[] agents) {
         this.agents = agents;
         this.size = size;
     }
@@ -29,7 +31,7 @@ public class SquaredChunksEnvironment implements Environment {
                 chunks[i][j] = new ArrayList<>();
             }
         }
-        for (Agent agent : agents) {
+        for (SEIRSAgent agent : agents) {
             int x = agent.getPosition().x/CHUNK_SIZE;
             int y = agent.getPosition().y/CHUNK_SIZE;
             chunks[x][y].add(agent);
@@ -57,12 +59,12 @@ public class SquaredChunksEnvironment implements Environment {
         };
     }
 
-    private List<Agent> getChunkNeighbors(int relativeTo, Point p) {
+    private List<SEIRSAgent> getChunkNeighbors(int relativeTo, Point p) {
         Point newPosition = getRelativePoint(relativeTo,p);
         Point chunk = new Point(newPosition.x/CHUNK_SIZE,newPosition.y/CHUNK_SIZE);
-        var neighbors = new ArrayList<Agent>();
+        List<SEIRSAgent> neighbors = new ArrayList<>();
         try{
-            for (Agent agent : chunks[chunk.x][chunk.y]) {
+            for (SEIRSAgent agent : chunks[chunk.x][chunk.y]) {
                 if (detectCollision(p, agent.getPosition())) {
                     neighbors.add(agent);
                 }
@@ -73,12 +75,11 @@ public class SquaredChunksEnvironment implements Environment {
         return neighbors;
     }
 
-    @Override
-    public List<Agent> getNeighbors(Point position) {
+    public List<SEIRSAgent> getNeighbors(Point position) {
         if (chunks == null) {
             throw new IllegalStateException("Chunks aren't initialized, you should use the initiateMethod() first.");
         }
-        var neighbors = new ArrayList<Agent>();
+        var neighbors = new ArrayList<SEIRSAgent>();
 
         for (int i = 0; i < MAX_CHUNK; i++) {
             neighbors.addAll(getChunkNeighbors(i,position));
@@ -86,30 +87,33 @@ public class SquaredChunksEnvironment implements Environment {
         return neighbors;
     }
 
-    @Override
     public void notifyNewPosition(Point oldPosition, Point newPosition, Agent agent) {
         if (chunks == null) {
             throw new IllegalStateException("Chunks aren't initialized, you should use the initiateMethod() first.");
         }
         if (oldPosition.x/CHUNK_SIZE != newPosition.x/CHUNK_SIZE || oldPosition.y/CHUNK_SIZE != newPosition.y/CHUNK_SIZE) {
-            chunks[oldPosition.x/CHUNK_SIZE][oldPosition.y/CHUNK_SIZE].remove(agent);
-            chunks[newPosition.x/CHUNK_SIZE][newPosition.y/CHUNK_SIZE].add(agent);
+            chunks[oldPosition.x/CHUNK_SIZE][oldPosition.y/CHUNK_SIZE].remove((SEIRSAgent) agent);
+            chunks[newPosition.x/CHUNK_SIZE][newPosition.y/CHUNK_SIZE].add((SEIRSAgent) agent);
         }
     }
 
-    @Override
     public HashMap<String,Integer> getAgentStatus() {
 
         var map = new HashMap<String,Integer>();
-        map.put(State.EXPOSED,0);
-        map.put(State.INFECTED,0);
-        map.put(State.RECOVERED,0);
-        map.put(State.SUCEPTIBLE,0);
+        map.put(SEIRSState.EXPOSED,0);
+        map.put(SEIRSState.INFECTED,0);
+        map.put(SEIRSState.RECOVERED,0);
+        map.put(SEIRSState.SUCEPTIBLE,0);
 
-        for (Agent agent : agents) {
-            String state = agent.getState().toString();
+        for (SEIRSAgent SEIRSAgent : agents) {
+            String state = SEIRSAgent.getState().toString();
             map.put(state,map.get(state)+1);
         }
         return map;
+    }
+
+    @Override
+    public int getSize() {
+        return size;
     }
 }

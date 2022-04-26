@@ -1,8 +1,8 @@
 package view;
 
-import sma.agents.Agent;
-import sma.agents.states.*;
-import sma.environment.SquaredChunksEnvironment;
+import agents.SEIRSAgent;
+import agents.states.SEIRSState;
+import environment.SEIRSEnvironment;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,49 +10,40 @@ import java.awt.*;
 public class DisplaySquaredEnvironment extends JPanel {
 
 
-    private int windowWidth;
-    private int windowHeight;
+    private final SEIRSAgent[] SEIRSAgents;
 
-    private Agent[] agents;
-
-    private SquaredChunksEnvironment environment;
-
-    public DisplaySquaredEnvironment(SquaredChunksEnvironment environment, Agent[] agents) {
-        this.environment = environment;
+    public DisplaySquaredEnvironment(SEIRSEnvironment environment, SEIRSAgent[] SEIRSAgents) {
         this.setDoubleBuffered(true);
-        this.windowWidth = environment.size;
-        this.windowHeight = environment.size;
-        this.agents = agents;
-        setSize(windowWidth,windowHeight);
+        this.SEIRSAgents = SEIRSAgents;
+        setSize(environment.size,environment.size);
         setVisible(true);
     }
 
-    private void drawCenteredCircle(Graphics g, int x, int y, int r) {
-        x = x-(r/2);
-        y = y-(r/2);
-        g.fillOval(x,y,r,r);
+    private void drawCenteredCircle(Graphics g, int x, int y) {
+        x = x-(SEIRSEnvironment.RADIUS /2);
+        y = y-(SEIRSEnvironment.RADIUS /2);
+        g.fillOval(x,y, SEIRSEnvironment.RADIUS, SEIRSEnvironment.RADIUS);
     }
 
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        for (int i = 0; i < agents.length; i++) {
-            var agent = agents[i];
-            if (agent != null) {
-                colorAgent(g,agent);
-                drawCenteredCircle(g,agent.getPosition().x,agent.getPosition().y,environment.RADIUS);
+        for (SEIRSAgent SEIRSAgent : SEIRSAgents) {
+            if (SEIRSAgent != null) {
+                colorAgent(g, SEIRSAgent);
+                drawCenteredCircle(g, SEIRSAgent.getPosition().x, SEIRSAgent.getPosition().y);
             }
         }
     }
 
-    private void colorAgent(Graphics g, Agent a) {
+    private void colorAgent(Graphics g, SEIRSAgent a) {
         var state = a.getState();
         switch (state.toString()) {
-            case State.SUCEPTIBLE-> g.setColor(Color.GRAY);
-            case State.EXPOSED -> g.setColor(Color.YELLOW);
-            case State.INFECTED -> g.setColor(Color.RED);
-            case State.RECOVERED -> g.setColor(Color.GREEN);
+            case SEIRSState.SUCEPTIBLE-> g.setColor(Color.GRAY);
+            case SEIRSState.EXPOSED -> g.setColor(Color.YELLOW);
+            case SEIRSState.INFECTED -> g.setColor(Color.RED);
+            case SEIRSState.RECOVERED -> g.setColor(Color.GREEN);
         }
     }
 }

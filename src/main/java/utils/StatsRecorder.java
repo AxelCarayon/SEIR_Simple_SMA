@@ -4,11 +4,13 @@ import java.io.*;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class StatsRecorder {
 
     private static int nbOfCycles = 0;
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void writeToCSV(HashMap<String,Integer> data, String outputFile) throws IOException {
 
         if (!outputFile.endsWith(".csv")) {
@@ -29,24 +31,24 @@ public class StatsRecorder {
         List<String> keys = data.keySet().stream().toList();
         if (nbOfCycles == 0) {
             bw.flush();
-            String str = "";
+            StringBuilder str = new StringBuilder();
             for (int i = 0; i < keys.size(); i++) {
-                str+=keys.get(i);
+                str.append(keys.get(i));
                 if (i != keys.size()-1){
-                    str+=",";
+                    str.append(",");
                 }
             }
-            bw.append(str+'\n');
+            bw.append(str.toString()).append(String.valueOf('\n'));
         }
 
-        String line = "";
+        StringBuilder line = new StringBuilder();
         for (String title : keys) {
-            line += data.get(title);
-            if (title != keys.get(keys.size()-1)) {
-                line+=",";
+            line.append(data.get(title));
+            if (!Objects.equals(title, keys.get(keys.size() - 1))) {
+                line.append(",");
             }
         }
-        bw.append(line+'\n');
+        bw.append(line.toString()).append(String.valueOf('\n'));
         bw.close();
         nbOfCycles++;
     }

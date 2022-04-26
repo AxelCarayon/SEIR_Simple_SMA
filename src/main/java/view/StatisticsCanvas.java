@@ -1,6 +1,6 @@
 package view;
 
-import sma.agents.states.State;
+import agents.states.SEIRSState;
 import utils.YamlReader;
 
 import javax.swing.*;
@@ -9,10 +9,10 @@ import java.util.HashMap;
 
 public class StatisticsCanvas extends JPanel {
 
-    private int canvasWidth;
-    private int canvasHeight;
+    private final int canvasWidth;
+    private final int canvasHeight;
     private HashMap<String,Integer> values;
-    private int total;
+    private final int total;
 
     public StatisticsCanvas(int width,int height) {
         this.setDoubleBuffered(false);
@@ -26,10 +26,10 @@ public class StatisticsCanvas extends JPanel {
 
     private Color stringToColor(String str) {
         return switch (str){
-            case State.EXPOSED -> Color.YELLOW;
-            case State.SUCEPTIBLE -> Color.GRAY;
-            case State.INFECTED -> Color.RED;
-            case State.RECOVERED -> Color.GREEN;
+            case SEIRSState.EXPOSED -> Color.YELLOW;
+            case SEIRSState.SUCEPTIBLE -> Color.GRAY;
+            case SEIRSState.INFECTED -> Color.RED;
+            case SEIRSState.RECOVERED -> Color.GREEN;
             default -> throw new IllegalStateException("Illegal state : "+str);
         };
     }

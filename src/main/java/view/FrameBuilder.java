@@ -47,7 +47,7 @@ public class FrameBuilder {
         components.add(pair);
     }
 
-    public JFrame buildWindow() {
+    public void buildWindow() {
         JFrame frame = new JFrame();
         frame.setLayout(new java.awt.GridLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,6 +64,5 @@ public class FrameBuilder {
         frame.setSize(windowWidth,windowHeight);
         frame.setResizable(false);
         frame.setVisible(true);
-        return frame;
     }
 }

@@ -8,8 +8,7 @@ import java.io.File;
 
 public class YamlReader {
 
-    private static ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-    private static ObjectMapper om = new ObjectMapper(new YAMLFactory());
+    private static final ObjectMapper om = new ObjectMapper(new YAMLFactory());
     private static Parameters parameters;
 
     public static final String FILE_PATH = "src/main/resources/parameters.yaml";

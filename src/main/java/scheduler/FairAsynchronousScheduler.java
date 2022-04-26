@@ -1,7 +1,6 @@
-package sma.scheduler;
+package scheduler;
 
-import sma.agents.Agent;
-import sma.agents.RandomWalkingAgent;
+import agents.Agent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,17 +9,19 @@ import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class FairAsynchronousScheduler implements Scheduler{
+public class FairAsynchronousScheduler extends AsynchronousScheduler {
 
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private Queue<Agent> queue;
 
-    public FairAsynchronousScheduler(Agent[] agents) {
+    @Override
+    public void init(Agent[] agents) {
         this.queue = new ConcurrentLinkedQueue<>(Arrays.stream(agents).toList());
     }
 
-    public void nextCycle() {
-        List<Future<Agent>> results = queue.parallelStream().map(agent -> executor.submit(() -> {agent.move(); return agent;})).toList();
+    @Override
+    public void doNextCycle() {
+        List<Future<Agent>> results = queue.parallelStream().map(agent -> executor.submit(() -> {agent.wakeUp(); return agent;})).toList();
         Function<Future<Agent>, Agent> futureTreatment = futureAgent -> {
             try {
                 return futureAgent.get();

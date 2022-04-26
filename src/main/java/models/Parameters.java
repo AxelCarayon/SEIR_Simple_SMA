@@ -1,5 +1,6 @@
 package models;
 
+@SuppressWarnings("unused")
 public class Parameters {
 
     private int seed;
