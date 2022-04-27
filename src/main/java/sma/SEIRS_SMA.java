@@ -1,5 +1,6 @@
 package sma;
 
+import agents.FairInfectionRWAgent;
 import agents.SEIRSAgent;
 import agents.states.InfectedSEIRSState;
 import environment.SEIRSEnvironment;
@@ -27,7 +28,7 @@ import java.util.Random;
 public class SEIRS_SMA implements SMA{
 
     private Parameters parameters;
-    private RandomWalkingAgent[] agents;
+    private SEIRSAgent[] agents;
     private SEIRSEnvironment environment;
     private Scheduler scheduler;
     private StatisticsCanvas statisticsCanvas;
@@ -78,7 +79,12 @@ public class SEIRS_SMA implements SMA{
     private void initPopulation() {
         for (int i = 0; i<parameters.getPopulation();i++) {
             Point position = new Point(r.nextInt(parameters.getSize()),r.nextInt(parameters.getSize()));
-            RandomWalkingAgent agent = new RandomWalkingAgent(position,parameters.getSeed()+i,environment);
+            SEIRSAgent agent;
+            if (parameters.isInfectionStacks()) {
+                agent = new RandomWalkingAgent(position,parameters.getSeed()+i,environment);
+            } else {
+                agent = new FairInfectionRWAgent(position,parameters.getSeed()+i,environment);
+            }
             agents[i] = agent;
         }
     }
@@ -112,7 +118,9 @@ public class SEIRS_SMA implements SMA{
         initPopulation();
         infectPatientZero();
         initScheduler();
-        initGraphics();
+        if (parameters.isGraphicalMode()) {
+            initGraphics();
+        }
     }
 
 

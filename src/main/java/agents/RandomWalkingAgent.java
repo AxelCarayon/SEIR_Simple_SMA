@@ -11,10 +11,10 @@ import java.util.Random;
 
 public class RandomWalkingAgent implements SEIRSAgent {
 
-    private Point position;
-    private final Random r;
-    private final SEIRSEnvironment environment;
-    private SEIRSState state;
+    protected Point position;
+    protected final Random r;
+    protected final SEIRSEnvironment environment;
+    protected SEIRSState state;
 
     public RandomWalkingAgent(Point position, int seed, SEIRSEnvironment environment) {
         this.position = position;

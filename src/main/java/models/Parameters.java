@@ -15,6 +15,7 @@ public class Parameters {
     private int timeBetweenCycles;
     private boolean synchronousMode;
     private boolean graphicalMode;
+    private boolean infectionStacks;
 
     public Parameters() {
     }
@@ -66,4 +67,8 @@ public class Parameters {
     public boolean isGraphicalMode() { return graphicalMode; }
 
     public void setGraphicalMode(boolean graphicalMode) { this.graphicalMode = graphicalMode; }
+
+    public boolean isInfectionStacks() { return infectionStacks; }
+
+    public void setInfectionStacks(boolean infectionStacks) { this.infectionStacks = infectionStacks; }
 }
