@@ -1,9 +1,11 @@
 package agents.states;
 
+import agents.SEIRSAgent;
+
 public class InfectedSEIRSState extends SEIRSState {
 
-    public InfectedSEIRSState(agents.SEIRSAgent SEIRSAgent) {
-        super(SEIRSAgent);
+    public InfectedSEIRSState(SEIRSAgent agent) {
+        super(agent);
     }
 
     @Override

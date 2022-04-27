@@ -9,7 +9,7 @@ import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class FairAsynchronousScheduler extends AsynchronousScheduler {
+public class FairAsynchronousScheduler implements Scheduler {
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private Queue<Agent> queue;

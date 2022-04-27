@@ -1,9 +1,11 @@
 package agents.states;
 
+import agents.SEIRSAgent;
+
 public class SuceptibleSEIRSState extends SEIRSState {
 
-    public SuceptibleSEIRSState(agents.SEIRSAgent SEIRSAgent) {
-        super(SEIRSAgent);
+    public SuceptibleSEIRSState(SEIRSAgent agent) {
+        super(agent);
     }
 
     @Override

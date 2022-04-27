@@ -1,9 +1,11 @@
 package agents.states;
 
+import agents.SEIRSAgent;
+
 public class ExposedSEIRSState extends SEIRSState {
 
-    public ExposedSEIRSState(agents.SEIRSAgent SEIRSAgent) {
-        super(SEIRSAgent);
+    public ExposedSEIRSState(SEIRSAgent agent) {
+        super(agent);
     }
 
     @Override

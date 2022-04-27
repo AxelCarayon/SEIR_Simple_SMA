@@ -4,13 +4,14 @@ import agents.Agent;
 
 import java.util.*;
 
-public class FairSynchronousScheduler extends SynchronousScheduler {
+public class FairSynchronousScheduler implements Scheduler {
 
     private Agent[] agents;
     private Stack<Integer> executionOrder;
+    private final Random r;
 
     public FairSynchronousScheduler(int seed) {
-        super(seed);
+        r = new Random(seed);
     }
 
     private void generateExecutionOrder() {

@@ -2,6 +2,7 @@ package view;
 
 import agents.SEIRSAgent;
 import agents.states.SEIRSState;
+import environment.ChunkedSEIRSEnvironment;
 import environment.SEIRSEnvironment;
 
 import javax.swing.*;
@@ -15,14 +16,14 @@ public class DisplaySquaredEnvironment extends JPanel {
     public DisplaySquaredEnvironment(SEIRSEnvironment environment, SEIRSAgent[] SEIRSAgents) {
         this.setDoubleBuffered(true);
         this.SEIRSAgents = SEIRSAgents;
-        setSize(environment.size,environment.size);
+        setSize(environment.getSize(),environment.getSize());
         setVisible(true);
     }
 
     private void drawCenteredCircle(Graphics g, int x, int y) {
-        x = x-(SEIRSEnvironment.RADIUS /2);
-        y = y-(SEIRSEnvironment.RADIUS /2);
-        g.fillOval(x,y, SEIRSEnvironment.RADIUS, SEIRSEnvironment.RADIUS);
+        x = x-(ChunkedSEIRSEnvironment.RADIUS /2);
+        y = y-(ChunkedSEIRSEnvironment.RADIUS /2);
+        g.fillOval(x,y, ChunkedSEIRSEnvironment.RADIUS, ChunkedSEIRSEnvironment.RADIUS);
     }
 
 

@@ -1,10 +1,13 @@
 package sma;
 
-import agents.Agent;
-import environment.Environment;
+import agents.SEIRSAgent;
+import agents.states.InfectedSEIRSState;
+import environment.SEIRSEnvironment;
 import models.Parameters;
 import agents.RandomWalkingAgent;
-import environment.SEIRSEnvironment;
+import environment.ChunkedSEIRSEnvironment;
+import scheduler.FairAsynchronousScheduler;
+import scheduler.FairSynchronousScheduler;
 import scheduler.Scheduler;
 import utils.StatsRecorder;
 import utils.YamlReader;
@@ -12,28 +15,26 @@ import view.DisplaySquaredEnvironment;
 import view.FrameBuilder;
 import view.StatisticsCanvas;
 
+import java.awt.*;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Random;
 
 @SuppressWarnings("InfiniteLoopStatement")
 public class SEIRS_SMA implements SMA{
 
-    private final Parameters parameters;
+    private Parameters parameters;
     private RandomWalkingAgent[] agents;
     private SEIRSEnvironment environment;
     private Scheduler scheduler;
     private StatisticsCanvas statisticsCanvas;
     private DisplaySquaredEnvironment display;
+    private Random r;
 
     private HashMap<String,Integer> stats;
-
-    public SEIRS_SMA() {
-        parameters = YamlReader.getParams();
-        agents = new RandomWalkingAgent[parameters.getPopulation()];
-    }
 
     private void initGraphics() {
         statisticsCanvas = new StatisticsCanvas(500,500);
@@ -43,7 +44,7 @@ public class SEIRS_SMA implements SMA{
         frameBuilder.addComponent(display,FrameBuilder.TOP);
         frameBuilder.addComponent(statisticsCanvas,FrameBuilder.RIGHT);
         frameBuilder.buildWindow();
-        statisticsCanvas.updateValues(environment.getAgentStatus());
+        statisticsCanvas.updateValues(environment.getAgentsStatus());
         statisticsCanvas.repaint();
     }
 
@@ -55,7 +56,7 @@ public class SEIRS_SMA implements SMA{
 
     private void doNextCycle(){
         scheduler.doNextCycle();
-        stats = environment.getAgentStatus();
+        stats = environment.getAgentsStatus();
         try{
             StatsRecorder.writeToCSV(stats,"src/main/resources/output.csv");
         } catch (IOException e) {
@@ -74,13 +75,43 @@ public class SEIRS_SMA implements SMA{
         }
     }
 
-    @Override
-    public void init(Environment environment, Scheduler scheduler, Agent[] agents) {
-        this.agents = (RandomWalkingAgent[]) agents;
-        this.scheduler = scheduler;
+    private void initPopulation() {
+        for (int i = 0; i<parameters.getPopulation();i++) {
+            Point position = new Point(r.nextInt(parameters.getSize()),r.nextInt(parameters.getSize()));
+            RandomWalkingAgent agent = new RandomWalkingAgent(position,parameters.getSeed()+i,environment);
+            agents[i] = agent;
+        }
+    }
+
+    private void infectPatientZero() {
+        for (int i=0 ; i< parameters.getNbOfPatientZero(); i++) {
+            SEIRSAgent agent = agents[(r.nextInt(parameters.getPopulation()))];
+            while (agent.getState() instanceof InfectedSEIRSState) {
+                agent = agents[(r.nextInt(parameters.getPopulation()))];
+            }
+            agent.changeState(new InfectedSEIRSState(agent));
+        }
+    }
+
+    private void initScheduler() {
+        if (parameters.isSynchronousMode()) {
+            scheduler = new FairSynchronousScheduler(parameters.getSeed());
+        } else {
+            scheduler = new FairAsynchronousScheduler();
+        }
         scheduler.init(agents);
-        this.environment = (SEIRSEnvironment)environment;
-        this.environment.initiateChunks();
+    }
+
+
+    @Override
+    public void init() {
+        parameters = YamlReader.getParams();
+        r = new Random(parameters.getSeed());
+        agents = new RandomWalkingAgent[parameters.getPopulation()];
+        environment = new ChunkedSEIRSEnvironment(parameters.getSize(),agents);
+        initPopulation();
+        infectPatientZero();
+        initScheduler();
         initGraphics();
     }
 
@@ -105,5 +136,11 @@ public class SEIRS_SMA implements SMA{
             System.out.println("Elapsed time : " + duration.toHoursPart() + " hours, " + duration.toMinutesPart() + " minutes, " + duration.toSecondsPart() + "seconds.");
             System.exit(0);
         }
+    }
+
+    public static void main(String[] args) {
+        SMA sma = new SEIRS_SMA();
+        sma.init();
+        sma.run();
     }
 }

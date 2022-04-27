@@ -4,8 +4,8 @@ import agents.SEIRSAgent;
 
 public class RecoveredSEIRSState extends SEIRSState {
 
-    public RecoveredSEIRSState(SEIRSAgent SEIRSAgent) {
-        super(SEIRSAgent);
+    public RecoveredSEIRSState(SEIRSAgent agent) {
+        super(agent);
     }
 
     @Override

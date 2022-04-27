@@ -8,5 +8,5 @@ nbOfPatientZero: 10
 population: 5000
 seed: 120
 size: 500
-synchronousMode: false
+synchronousMode: true
 timeBetweenCycles: 0
