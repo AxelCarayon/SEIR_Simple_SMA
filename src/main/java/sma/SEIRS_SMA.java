@@ -34,7 +34,7 @@ public class SEIRS_SMA implements SMA{
     private StatisticsCanvas statisticsCanvas;
     private DisplaySquaredEnvironment display;
     private Random r;
-    private FrameBuilder fb = new FrameBuilder();
+    private final FrameBuilder fb = new FrameBuilder();
 
     private HashMap<String,Integer> stats;
 
