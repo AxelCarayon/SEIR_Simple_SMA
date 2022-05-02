@@ -9,15 +9,11 @@ import java.util.HashMap;
 
 public class StatisticsCanvas extends JPanel {
 
-    private final int canvasWidth;
-    private final int canvasHeight;
     private HashMap<String,Integer> values;
     private final int total;
 
     public StatisticsCanvas(int width,int height) {
         this.setDoubleBuffered(false);
-        canvasHeight = height;
-        canvasWidth = width;
         values = new HashMap<>();
         total = YamlReader.getParams().getPopulation();
         setSize(width, height);
@@ -43,15 +39,14 @@ public class StatisticsCanvas extends JPanel {
         int start = 0;
         g.clearRect(0,0,getWidth(),getHeight());
         for (int i=0 ; i <values.keySet().size();i++) {
-            String state = (String) values.keySet().toArray()[i];
+            String state = values.keySet().toArray()[i].toString();
             int value = values.get(state);
             g.setColor(stringToColor(state));
-            float height = ((float)value/total)*canvasHeight;
-            g.fillRect(10,start,canvasWidth/4,start+(int)height);
+            float height = ((float)value/total)*getHeight();
+            g.fillRect(10,start,getWidth()/4,start+(int)height);
             start +=height;
             g.setColor(Color.BLACK);
-            g.drawString(state + " : "+value,canvasWidth/2,canvasHeight/values.keySet().size()*(1+i)-100);
+            g.drawString(state + " : "+value,getWidth()/2,getHeight()/values.keySet().size()*(1+i)-100);
         }
-
     }
 }

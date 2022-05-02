@@ -1,13 +1,13 @@
-graphicalMode: false
+graphicalMode: true
 incubationRate: 0.3
-infectionRate: 0.2
-looseImmunityRate: 0.09
-recoveryRate: 0.6
-nbOfCycles: 300
-nbOfPatientZero: 10
-population: 5000
+infectionRate: 0.75
+looseImmunityRate: 0.008
+recoveryRate: 0.1429
+nbOfCycles: 2000
+nbOfPatientZero: 1
+population: 3000
 seed: 120
-size: 500
-synchronousMode: true
+size: 1000
+synchronousMode: false
 timeBetweenCycles: 0
-infectionStacks : false
+infectionStacks : true

@@ -34,17 +34,18 @@ public class SEIRS_SMA implements SMA{
     private StatisticsCanvas statisticsCanvas;
     private DisplaySquaredEnvironment display;
     private Random r;
+    private FrameBuilder fb = new FrameBuilder();
 
     private HashMap<String,Integer> stats;
 
     private void initGraphics() {
-        statisticsCanvas = new StatisticsCanvas(500,500);
+        statisticsCanvas = new StatisticsCanvas(300,parameters.getSize());
         display = new DisplaySquaredEnvironment(environment,agents);
-        FrameBuilder frameBuilder = new FrameBuilder();
 
-        frameBuilder.addComponent(display,FrameBuilder.TOP);
-        frameBuilder.addComponent(statisticsCanvas,FrameBuilder.RIGHT);
-        frameBuilder.buildWindow();
+        fb.setSimulationCanvas(display);
+        fb.setStatsCanvas(statisticsCanvas);
+
+        fb.buildWindow();
         statisticsCanvas.updateValues(environment.getAgentsStatus());
         statisticsCanvas.repaint();
     }
