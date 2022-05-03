@@ -2,35 +2,27 @@ package agents;
 
 import agents.states.SEIRSState;
 import agents.states.SuceptibleSEIRSState;
+import behaviors.Randomized;
 import environment.SEIRSEnvironment;
 import utils.YamlReader;
 
 import java.awt.Point;
-import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
 
-@SuppressWarnings("ThrowablePrintedToSystemOut")
-public class RandomWalkingAgent implements SEIRSAgent {
+public class RandomWalkingAgent extends Randomized implements SEIRSAgent {
 
     protected Point position;
-    protected Random r;
     protected final SEIRSEnvironment environment;
     protected SEIRSState state;
 
     private List<Point> authorizedPositions;
     private Point nextPosition;
 
-    public RandomWalkingAgent(Point position, int seed, SEIRSEnvironment environment) {
+    public RandomWalkingAgent(Point position, long seed, SEIRSEnvironment environment) {
+        super(seed);
         this.position = position;
         this.state = new SuceptibleSEIRSState(this);
         this.environment = environment;
-        try{
-            r = SecureRandom.getInstance("SHA1PRNG", "SUN");
-        }catch (Exception e) {
-            System.err.println(e);
-            System.exit(1);
-        }
         r.setSeed(seed);
     }
 

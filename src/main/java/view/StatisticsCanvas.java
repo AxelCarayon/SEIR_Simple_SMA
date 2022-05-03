@@ -15,7 +15,7 @@ public class StatisticsCanvas extends JPanel {
     public StatisticsCanvas(int width,int height) {
         this.setDoubleBuffered(false);
         values = new HashMap<>();
-        total = YamlReader.getParams().getPopulation();
+        total = YamlReader.getParams().population();
         setSize(width, height);
         setVisible(true);
     }

@@ -1,26 +1,17 @@
 package scheduler;
 
-import agents.Agent;
+import behaviors.Randomized;
+import behaviors.Wakeable;
 
-import java.security.SecureRandom;
 import java.util.*;
 
-@SuppressWarnings("ThrowablePrintedToSystemOut")
-public class FairSynchronousScheduler implements Scheduler {
+public class FairSynchronousScheduler extends Randomized implements Scheduler {
 
-    private Agent[] agents;
+    private Wakeable[] agents;
     private Stack<Integer> executionOrder;
-    private Random r;
 
-    public FairSynchronousScheduler(Integer seed) {
-
-        try{
-            r = SecureRandom.getInstance("SHA1PRNG", "SUN");
-        }catch (Exception e) {
-            System.err.println(e);
-            System.exit(1);
-        }
-        r.setSeed(seed);
+    public FairSynchronousScheduler(long seed) {
+        super(seed);
     }
 
     private void generateExecutionOrder() {
@@ -38,7 +29,7 @@ public class FairSynchronousScheduler implements Scheduler {
     }
 
     @Override
-    public void init(Agent[] agents) {
+    public void init(Wakeable[] agents) {
         this.agents = agents;
         executionOrder = new Stack<>();
     }

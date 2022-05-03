@@ -2,7 +2,7 @@ graphicalMode: true
 incubationRate: 0.3
 infectionRate: 0.8
 looseImmunityRate: 0.008
-recoveryRate: 0.1429
+recoveryRate: 0.14
 nbOfCycles: 2000
 nbOfPatientZero: 1
 population: 3000
@@ -11,4 +11,4 @@ size: 1000
 wrappingWorld : true
 synchronousMode: false
 timeBetweenCycles: 0
-infectionStacks : true
+infectionStacks : false

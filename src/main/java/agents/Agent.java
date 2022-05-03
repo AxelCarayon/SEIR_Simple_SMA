@@ -1,6 +1,6 @@
 package agents;
 
-public interface Agent {
+import behaviors.Wakeable;
 
-    void wakeUp();
+public interface Agent extends Wakeable {
 }

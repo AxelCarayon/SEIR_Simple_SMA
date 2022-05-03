@@ -1,7 +1,7 @@
 package environment;
 
-import agents.Agent2D;
 import agents.SEIRSAgent;
+import behaviors.Positionable2D;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class WrappingChunkedSEIRSEnvironment extends ChunkedSEIRSEnvironment imp
     }
 
     @Override
-    public List<Point> perceiveAuthorizedPositions(Agent2D agent) {
+    public List<Point> perceiveAuthorizedPositions(Positionable2D agent) {
         List<Point> authorisedPositions = new ArrayList<>();
         for (int move = 0; move < MAX_MOVEMENT; move++) {
             Point position = getNextPosition(move,agent.getPosition());

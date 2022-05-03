@@ -10,7 +10,6 @@ import java.awt.*;
 
 public class DisplaySquaredEnvironment extends JPanel {
 
-
     private final SEIRSAgent[] SEIRSAgents;
 
     public DisplaySquaredEnvironment(SEIRSEnvironment environment, SEIRSAgent[] SEIRSAgents) {

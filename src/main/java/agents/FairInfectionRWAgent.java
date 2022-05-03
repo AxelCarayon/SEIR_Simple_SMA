@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class FairInfectionRWAgent extends RandomWalkingAgent implements SEIRSAgent {
 
-    public FairInfectionRWAgent(Point position, int seed, SEIRSEnvironment environment) {
+    public FairInfectionRWAgent(Point position, long seed, SEIRSEnvironment environment) {
         super(position, seed, environment);
     }
 
@@ -16,7 +16,7 @@ public class FairInfectionRWAgent extends RandomWalkingAgent implements SEIRSAge
         boolean isExposed = false;
         int roll = r.nextInt(10000)+1;
         if (this.environment.getInfectedNeighbors(position).size() != 0) {
-            if (roll <= YamlReader.getParams().getInfectionRate()*10000) {
+            if (roll <= YamlReader.getParams().infectionRate()*10000) {
                 isExposed = true;
             }
         }

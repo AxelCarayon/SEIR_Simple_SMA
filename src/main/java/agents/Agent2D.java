@@ -1,8 +1,7 @@
 package agents;
 
-import java.awt.*;
+import behaviors.Positionable2D;
 
-public interface Agent2D extends Agent {
+public interface Agent2D extends Agent, Positionable2D {
 
-    Point getPosition();
 }

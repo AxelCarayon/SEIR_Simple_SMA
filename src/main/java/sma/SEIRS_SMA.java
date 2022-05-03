@@ -3,6 +3,7 @@ package sma;
 import agents.FairInfectionRWAgent;
 import agents.SEIRSAgent;
 import agents.states.InfectedSEIRSState;
+import behaviors.Randomized;
 import environment.SEIRSEnvironment;
 import environment.WrappingChunkedSEIRSEnvironment;
 import models.Parameters;
@@ -19,25 +20,37 @@ import view.StatisticsCanvas;
 
 import java.awt.*;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 
-@SuppressWarnings({"InfiniteLoopStatement", "ThrowablePrintedToSystemOut"})
-public class SEIRS_SMA implements SMA{
+@SuppressWarnings("InfiniteLoopStatement")
+public class SEIRS_SMA extends Randomized implements SMA{
 
-    private Parameters parameters;
-    private SEIRSAgent[] agents;
+    private final Parameters parameters;
+    private final SEIRSAgent[] agents;
     private SEIRSEnvironment environment;
     private Scheduler scheduler;
     private StatisticsCanvas statisticsCanvas;
     private DisplaySquaredEnvironment display;
-    private SecureRandom r;
     private final FrameBuilder fb = new FrameBuilder();
 
     private HashMap<String,Integer> stats;
+
+    public SEIRS_SMA(Parameters params) {
+        super(params.seed());
+        parameters = YamlReader.getParams();
+        r.setSeed(parameters.seed());
+        agents = new RandomWalkingAgent[parameters.population()];
+        initEnvironment();
+        initPopulation();
+        infectPatientZero();
+        initScheduler();
+        if (parameters.graphicalMode()) {
+            initGraphics();
+        }
+    }
 
     private void initGraphics() {
         statisticsCanvas = new StatisticsCanvas(300,parameters.size());
@@ -119,28 +132,6 @@ public class SEIRS_SMA implements SMA{
         }
     }
 
-
-    @Override
-    public void init() {
-        parameters = YamlReader.getParams();
-        try{
-            r = SecureRandom.getInstance("SHA1PRNG", "SUN");
-        }catch (Exception e) {
-            System.err.println(e);
-            System.exit(1);
-        }
-        r.setSeed(parameters.seed());
-        agents = new RandomWalkingAgent[parameters.population()];
-        initEnvironment();
-        initPopulation();
-        infectPatientZero();
-        initScheduler();
-        if (parameters.graphicalMode()) {
-            initGraphics();
-        }
-    }
-
-
     @Override
     public void run() {
         Instant startTime = Instant.now();
@@ -164,8 +155,7 @@ public class SEIRS_SMA implements SMA{
     }
 
     public static void main(String[] args) {
-        SMA sma = new SEIRS_SMA();
-        sma.init();
+        SMA sma = new SEIRS_SMA(YamlReader.getParams());
         sma.run();
     }
 }

@@ -1,6 +1,6 @@
 package environment;
 
-import agents.Agent2D;
+import behaviors.Positionable2D;
 
 import java.awt.*;
 import java.util.List;
@@ -20,7 +20,7 @@ public interface Environment2D extends Environment {
     int DOWN_RIGHT = 8;
     int MAX_CHUNK = 9;
 
-    List<Point> perceiveAuthorizedPositions(Agent2D agent);
-    void notifyNewPosition(Point newPosition, Agent2D agent);
+    List<Point> perceiveAuthorizedPositions(Positionable2D agent);
+    void notifyNewPosition(Point newPosition, Positionable2D agent);
     int getSize();
 }

@@ -1,9 +1,9 @@
 package environment;
 
-import agents.Agent2D;
 import agents.SEIRSAgent;
 import agents.states.InfectedSEIRSState;
 import agents.states.SEIRSState;
+import behaviors.Positionable2D;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class ChunkedSEIRSEnvironment implements SEIRSEnvironment {
     }
 
     @Override
-    public List<Point> perceiveAuthorizedPositions(Agent2D agent) {
+    public List<Point> perceiveAuthorizedPositions(Positionable2D agent) {
         List<Point> authorizedPosition = new ArrayList<>();
 
         for (int move = 0; move < MAX_MOVEMENT; move++) {
@@ -102,7 +102,7 @@ public class ChunkedSEIRSEnvironment implements SEIRSEnvironment {
     }
 
     @Override
-    public void notifyNewPosition(Point newPosition, Agent2D agent) {
+    public void notifyNewPosition(Point newPosition, Positionable2D agent) {
         if (chunks == null) {
             initiateChunks();
         }

@@ -2,7 +2,7 @@ package models;
 
 @SuppressWarnings("unused")
 public record Parameters(
-        int seed,
+        long seed,
         int population,
         int size,
         int nbOfPatientZero,

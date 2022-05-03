@@ -1,6 +1,6 @@
 package scheduler;
 
-import agents.Agent;
+import behaviors.Wakeable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,19 +12,19 @@ import java.util.stream.Collectors;
 public class FairAsynchronousScheduler implements Scheduler {
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private Queue<Agent> queue;
+    private Queue<Wakeable> queue;
 
     @Override
-    public void init(Agent[] agents) {
+    public void init(Wakeable[] agents) {
         this.queue = new ConcurrentLinkedQueue<>(Arrays.stream(agents).toList());
     }
 
     @Override
     public void doNextCycle() {
-        List<Future<Agent>> results = queue.parallelStream().map(agent -> executor.submit(() -> {agent.wakeUp(); return agent;})).toList();
-        Function<Future<Agent>, Agent> futureTreatment = futureAgent -> {
+        List<Future<Wakeable>> results = queue.parallelStream().map(entity -> executor.submit(() -> {entity.wakeUp(); return entity;})).toList();
+        Function<Future<Wakeable>, Wakeable> futureTreatment = futureEntity -> {
             try {
-                return futureAgent.get();
+                return futureEntity.get();
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
