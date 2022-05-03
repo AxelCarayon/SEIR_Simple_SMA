@@ -2,48 +2,61 @@ package agents;
 
 import agents.states.SEIRSState;
 import agents.states.SuceptibleSEIRSState;
-import environment.ChunkedSEIRSEnvironment;
 import environment.SEIRSEnvironment;
 import utils.YamlReader;
 
 import java.awt.Point;
+import java.security.SecureRandom;
+import java.util.List;
 import java.util.Random;
 
 public class RandomWalkingAgent implements SEIRSAgent {
 
     protected Point position;
-    protected final Random r;
+    protected Random r;
     protected final SEIRSEnvironment environment;
     protected SEIRSState state;
 
+    private List<Point> authorizedPositions;
+    private Point nextPosition;
+    private int seed;
+
     public RandomWalkingAgent(Point position, int seed, SEIRSEnvironment environment) {
+        this.seed = seed;
         this.position = position;
         this.state = new SuceptibleSEIRSState(this);
         this.environment = environment;
-        this.r = new Random(seed);
+        try{
+            r = SecureRandom.getInstance("SHA1PRNG", "SUN");
+        }catch (Exception e) {
+            System.err.println(e);
+        }
+        r.setSeed(seed);
     }
 
     private void move() {
         state.onMovement();
-        int move = r.nextInt(4);
-        Point newPosition = switch (move) {
-            case SEIRSEnvironment.LEFT -> new Point(position.x- ChunkedSEIRSEnvironment.RADIUS,position.y);
-            case SEIRSEnvironment.RIGHT -> new Point(position.x+ ChunkedSEIRSEnvironment.RADIUS,position.y);
-            case SEIRSEnvironment.UP -> new Point(position.x,position.y- ChunkedSEIRSEnvironment.RADIUS);
-            case SEIRSEnvironment.DOWN -> new Point(position.x,position.y+ ChunkedSEIRSEnvironment.RADIUS);
-            default -> throw new IllegalStateException("Unexpected value: " + move);
-        };
-        if (newPosition.x <= environment.getSize()-1 && newPosition.x >= 0 && newPosition.y <= environment.getSize()-1 && newPosition.y >=0 ) {
-            environment.notifyNewPosition(position,newPosition ,this);
-            position = newPosition;
-        }
+        environment.notifyNewPosition(nextPosition,this);
+        position = nextPosition;
+    }
+
+    private void perceiveAuthorizedPositions() {
+        authorizedPositions =  environment.perceiveAuthorizedPositions(this);
+    }
+
+    private void decideNextMove() {
+        int next = r.nextInt(authorizedPositions.size());
+        nextPosition = authorizedPositions.get(next);
     }
 
     @Override
     public void wakeUp() {
-        move();
+        perceiveAuthorizedPositions();
+        if (!authorizedPositions.isEmpty()) {
+            decideNextMove();
+            move();
+        }
     }
-
 
     @Override
     public void changeState(SEIRSState SEIRSState) { this.state = SEIRSState; }

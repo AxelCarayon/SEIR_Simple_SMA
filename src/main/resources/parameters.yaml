@@ -1,6 +1,6 @@
 graphicalMode: true
 incubationRate: 0.3
-infectionRate: 0.75
+infectionRate: 1
 looseImmunityRate: 0.008
 recoveryRate: 0.1429
 nbOfCycles: 2000
@@ -9,5 +9,5 @@ population: 3000
 seed: 120
 size: 1000
 synchronousMode: false
-timeBetweenCycles: 0
+timeBetweenCycles: 10
 infectionStacks : true

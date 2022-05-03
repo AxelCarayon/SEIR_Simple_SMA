@@ -18,6 +18,9 @@ import view.StatisticsCanvas;
 
 import java.awt.*;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
@@ -33,7 +36,7 @@ public class SEIRS_SMA implements SMA{
     private Scheduler scheduler;
     private StatisticsCanvas statisticsCanvas;
     private DisplaySquaredEnvironment display;
-    private Random r;
+    private SecureRandom r;
     private final FrameBuilder fb = new FrameBuilder();
 
     private HashMap<String,Integer> stats;
@@ -82,9 +85,9 @@ public class SEIRS_SMA implements SMA{
             Point position = new Point(r.nextInt(parameters.getSize()),r.nextInt(parameters.getSize()));
             SEIRSAgent agent;
             if (parameters.isInfectionStacks()) {
-                agent = new RandomWalkingAgent(position,parameters.getSeed()+i,environment);
+                agent = new RandomWalkingAgent(position,(parameters.getSeed()+i),environment);
             } else {
-                agent = new FairInfectionRWAgent(position,parameters.getSeed()+i,environment);
+                agent = new FairInfectionRWAgent(position,(parameters.getSeed()+i),environment);
             }
             agents[i] = agent;
         }
@@ -92,7 +95,8 @@ public class SEIRS_SMA implements SMA{
 
     private void infectPatientZero() {
         for (int i=0 ; i< parameters.getNbOfPatientZero(); i++) {
-            SEIRSAgent agent = agents[(r.nextInt(parameters.getPopulation()))];
+            int nextInt = (r.nextInt(parameters.getPopulation()));
+            SEIRSAgent agent = agents[nextInt];
             while (agent.getState() instanceof InfectedSEIRSState) {
                 agent = agents[(r.nextInt(parameters.getPopulation()))];
             }
@@ -113,7 +117,12 @@ public class SEIRS_SMA implements SMA{
     @Override
     public void init() {
         parameters = YamlReader.getParams();
-        r = new Random(parameters.getSeed());
+        try{
+            r = SecureRandom.getInstance("SHA1PRNG", "SUN");
+        }catch (Exception e) {
+            System.err.println(e);
+        }
+        r.setSeed(parameters.getSeed());
         agents = new RandomWalkingAgent[parameters.getPopulation()];
         environment = new ChunkedSEIRSEnvironment(parameters.getSize(),agents);
         initPopulation();

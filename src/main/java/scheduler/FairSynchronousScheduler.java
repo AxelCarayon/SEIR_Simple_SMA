@@ -2,16 +2,24 @@ package scheduler;
 
 import agents.Agent;
 
+import java.nio.ByteBuffer;
+import java.security.SecureRandom;
 import java.util.*;
 
 public class FairSynchronousScheduler implements Scheduler {
 
     private Agent[] agents;
     private Stack<Integer> executionOrder;
-    private final Random r;
+    private Random r;
 
-    public FairSynchronousScheduler(int seed) {
-        r = new Random(seed);
+    public FairSynchronousScheduler(Integer seed) {
+
+        try{
+            r = SecureRandom.getInstance("SHA1PRNG", "SUN");
+        }catch (Exception e) {
+            System.err.println(e);
+        }
+        r.setSeed(seed);
     }
 
     private void generateExecutionOrder() {
