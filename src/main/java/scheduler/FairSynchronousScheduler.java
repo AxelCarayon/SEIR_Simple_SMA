@@ -2,10 +2,10 @@ package scheduler;
 
 import agents.Agent;
 
-import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.*;
 
+@SuppressWarnings("ThrowablePrintedToSystemOut")
 public class FairSynchronousScheduler implements Scheduler {
 
     private Agent[] agents;
@@ -18,6 +18,7 @@ public class FairSynchronousScheduler implements Scheduler {
             r = SecureRandom.getInstance("SHA1PRNG", "SUN");
         }catch (Exception e) {
             System.err.println(e);
+            System.exit(1);
         }
         r.setSeed(seed);
     }

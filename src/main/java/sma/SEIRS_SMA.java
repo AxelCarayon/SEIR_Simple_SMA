@@ -4,6 +4,7 @@ import agents.FairInfectionRWAgent;
 import agents.SEIRSAgent;
 import agents.states.InfectedSEIRSState;
 import environment.SEIRSEnvironment;
+import environment.WrappingChunkedSEIRSEnvironment;
 import models.Parameters;
 import agents.RandomWalkingAgent;
 import environment.ChunkedSEIRSEnvironment;
@@ -18,16 +19,13 @@ import view.StatisticsCanvas;
 
 import java.awt.*;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Random;
 
-@SuppressWarnings("InfiniteLoopStatement")
+@SuppressWarnings({"InfiniteLoopStatement", "ThrowablePrintedToSystemOut"})
 public class SEIRS_SMA implements SMA{
 
     private Parameters parameters;
@@ -42,7 +40,7 @@ public class SEIRS_SMA implements SMA{
     private HashMap<String,Integer> stats;
 
     private void initGraphics() {
-        statisticsCanvas = new StatisticsCanvas(300,parameters.getSize());
+        statisticsCanvas = new StatisticsCanvas(300,parameters.size());
         display = new DisplaySquaredEnvironment(environment,agents);
 
         fb.setSimulationCanvas(display);
@@ -68,12 +66,12 @@ public class SEIRS_SMA implements SMA{
             e.printStackTrace();
             System.exit(1);
         }
-        if (parameters.isGraphicalMode()) {
+        if (parameters.graphicalMode()) {
             updateGraphics();
         }
-        if (parameters.getTimeBetweenCycles() > 0) {
+        if (parameters.timeBetweenCycles() > 0) {
             try {
-                Thread.sleep(parameters.getTimeBetweenCycles());
+                Thread.sleep(parameters.timeBetweenCycles());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -81,36 +79,44 @@ public class SEIRS_SMA implements SMA{
     }
 
     private void initPopulation() {
-        for (int i = 0; i<parameters.getPopulation();i++) {
-            Point position = new Point(r.nextInt(parameters.getSize()),r.nextInt(parameters.getSize()));
+        for (int i = 0; i<parameters.population();i++) {
+            Point position = new Point(r.nextInt(parameters.size()),r.nextInt(parameters.size()));
             SEIRSAgent agent;
-            if (parameters.isInfectionStacks()) {
-                agent = new RandomWalkingAgent(position,(parameters.getSeed()+i),environment);
+            if (parameters.infectionStacks()) {
+                agent = new RandomWalkingAgent(position,(parameters.seed()+i),environment);
             } else {
-                agent = new FairInfectionRWAgent(position,(parameters.getSeed()+i),environment);
+                agent = new FairInfectionRWAgent(position,(parameters.seed()+i),environment);
             }
             agents[i] = agent;
         }
     }
 
     private void infectPatientZero() {
-        for (int i=0 ; i< parameters.getNbOfPatientZero(); i++) {
-            int nextInt = (r.nextInt(parameters.getPopulation()));
+        for (int i=0 ; i< parameters.nbOfPatientZero(); i++) {
+            int nextInt = (r.nextInt(parameters.population()));
             SEIRSAgent agent = agents[nextInt];
             while (agent.getState() instanceof InfectedSEIRSState) {
-                agent = agents[(r.nextInt(parameters.getPopulation()))];
+                agent = agents[(r.nextInt(parameters.population()))];
             }
             agent.changeState(new InfectedSEIRSState(agent));
         }
     }
 
     private void initScheduler() {
-        if (parameters.isSynchronousMode()) {
-            scheduler = new FairSynchronousScheduler(parameters.getSeed());
+        if (parameters.synchronousMode()) {
+            scheduler = new FairSynchronousScheduler(parameters.seed());
         } else {
             scheduler = new FairAsynchronousScheduler();
         }
         scheduler.init(agents);
+    }
+
+    private void initEnvironment() {
+        if (parameters.wrappingWorld()) {
+            environment = new WrappingChunkedSEIRSEnvironment(parameters.size(),agents);
+        } else {
+            environment = new ChunkedSEIRSEnvironment(parameters.size(),agents);
+        }
     }
 
 
@@ -121,14 +127,15 @@ public class SEIRS_SMA implements SMA{
             r = SecureRandom.getInstance("SHA1PRNG", "SUN");
         }catch (Exception e) {
             System.err.println(e);
+            System.exit(1);
         }
-        r.setSeed(parameters.getSeed());
-        agents = new RandomWalkingAgent[parameters.getPopulation()];
-        environment = new ChunkedSEIRSEnvironment(parameters.getSize(),agents);
+        r.setSeed(parameters.seed());
+        agents = new RandomWalkingAgent[parameters.population()];
+        initEnvironment();
         initPopulation();
         infectPatientZero();
         initScheduler();
-        if (parameters.isGraphicalMode()) {
+        if (parameters.graphicalMode()) {
             initGraphics();
         }
     }
@@ -138,13 +145,13 @@ public class SEIRS_SMA implements SMA{
     public void run() {
         Instant startTime = Instant.now();
         System.out.println("Starting simulation at : "+ Date.from(startTime));
-        if (parameters.getNbOfCycles() <0) {
+        if (parameters.nbOfCycles() <0) {
             while (true) {
                 doNextCycle();
             }
         } else {
             int cpt = 0;
-            while (cpt < parameters.getNbOfCycles()) {
+            while (cpt < parameters.nbOfCycles()) {
                 doNextCycle();
                 cpt++;
             }

@@ -78,37 +78,27 @@ public class ChunkedSEIRSEnvironment implements SEIRSEnvironment {
         return neighbors;
     }
 
-    private void wrapPosition(Point newPosition) {
-        if (newPosition.x >= size) {
-            newPosition.x -= size-1;
-        }
-        if (newPosition.x < 0) {
-            newPosition.x += size-1;
-        }
-        if (newPosition.y >= size) {
-            newPosition.y -= size-1;
-        }
-        if (newPosition.y < 0) {
-            newPosition.y +=size-1;
-        }
-    }
-
+    @Override
     public List<Point> perceiveAuthorizedPositions(Agent2D agent) {
         List<Point> authorizedPosition = new ArrayList<>();
 
         for (int move = 0; move < MAX_MOVEMENT; move++) {
-            Point position = switch (move) {
-                case LEFT -> new Point(agent.getPosition().x-RADIUS,agent.getPosition().y);
-                case RIGHT -> new Point (agent.getPosition().x+RADIUS,agent.getPosition().y);
-                case UP -> new Point(agent.getPosition().x, agent.getPosition().y-RADIUS);
-                case DOWN -> new Point(agent.getPosition().x, agent.getPosition().y +RADIUS);
-                default -> new Point(FORBIDDEN,FORBIDDEN);
-            };
+            Point position = getNextPosition(move,agent.getPosition());
             if (position.x < size && position.x >= 0 && position.y < size && position.y >= 0) {
                 authorizedPosition.add(position);
             }
         }
         return authorizedPosition;
+    }
+
+    protected Point getNextPosition(int move, Point position) {
+        return switch (move) {
+            case LEFT -> new Point(position.x-RADIUS,position.y);
+            case RIGHT -> new Point (position.x+RADIUS,position.y);
+            case UP -> new Point(position.x, position.y-RADIUS);
+            case DOWN -> new Point(position.x, position.y +RADIUS);
+            default -> new Point(FORBIDDEN,FORBIDDEN);
+        };
     }
 
     @Override
@@ -121,7 +111,6 @@ public class ChunkedSEIRSEnvironment implements SEIRSEnvironment {
             chunks[oldPosition.x/CHUNK_SIZE][oldPosition.y/CHUNK_SIZE].remove((SEIRSAgent) agent);
             chunks[newPosition.x/CHUNK_SIZE][newPosition.y/CHUNK_SIZE].add((SEIRSAgent) agent);
         }
-        //wrapPosition(newPosition);
     }
 
     @Override

@@ -10,6 +10,7 @@ import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
 
+@SuppressWarnings("ThrowablePrintedToSystemOut")
 public class RandomWalkingAgent implements SEIRSAgent {
 
     protected Point position;
@@ -19,10 +20,8 @@ public class RandomWalkingAgent implements SEIRSAgent {
 
     private List<Point> authorizedPositions;
     private Point nextPosition;
-    private int seed;
 
     public RandomWalkingAgent(Point position, int seed, SEIRSEnvironment environment) {
-        this.seed = seed;
         this.position = position;
         this.state = new SuceptibleSEIRSState(this);
         this.environment = environment;
@@ -30,6 +29,7 @@ public class RandomWalkingAgent implements SEIRSAgent {
             r = SecureRandom.getInstance("SHA1PRNG", "SUN");
         }catch (Exception e) {
             System.err.println(e);
+            System.exit(1);
         }
         r.setSeed(seed);
     }
@@ -66,7 +66,7 @@ public class RandomWalkingAgent implements SEIRSAgent {
         boolean isExposed = false;
         for (int i = 0 ; i<environment.getInfectedNeighbors(position).size() ; i++) {
             int roll = r.nextInt(10000)+1;
-            if (roll <= YamlReader.getParams().getInfectionRate()*10000) {
+            if (roll <= YamlReader.getParams().infectionRate()*10000) {
                 isExposed = true;
             }
         }
@@ -77,7 +77,7 @@ public class RandomWalkingAgent implements SEIRSAgent {
     public boolean isInfected() {
         boolean isSick = false;
         int roll = r.nextInt(10000)+1;
-        if (roll <= YamlReader.getParams().getIncubationRate()*10000) {
+        if (roll <= YamlReader.getParams().incubationRate()*10000) {
             isSick = true;
         }
         return isSick;
@@ -87,7 +87,7 @@ public class RandomWalkingAgent implements SEIRSAgent {
     public boolean isRecovered() {
         boolean isHealed = false;
         int roll = r.nextInt(10000)+1;
-        if (roll <= YamlReader.getParams().getRecoveryRate()*10000) {
+        if (roll <= YamlReader.getParams().recoveryRate()*10000) {
             isHealed = true;
         }
         return isHealed;
@@ -97,7 +97,7 @@ public class RandomWalkingAgent implements SEIRSAgent {
     public boolean hasLostImmunity() {
         boolean hasLostImmunity = false;
         int roll = r.nextInt(10000)+1;
-        if (roll <= YamlReader.getParams().getLooseImmunityRate()*10000) {
+        if (roll <= YamlReader.getParams().looseImmunityRate()*10000) {
             hasLostImmunity = true;
         }
         return hasLostImmunity;
