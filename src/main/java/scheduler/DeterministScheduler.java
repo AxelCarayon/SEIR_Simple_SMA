@@ -17,7 +17,6 @@ public class DeterministScheduler implements Scheduler {
 
     public DeterministScheduler(String csvFile) {
         readCSV(csvFile);
-        System.out.println(wakeUpOrder.size());
     }
 
     private void readCSV(String file) {
