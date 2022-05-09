@@ -15,5 +15,7 @@ public record Parameters(
         boolean synchronousMode,
         boolean graphicalMode,
         boolean infectionStacks,
-        boolean wrappingWorld) {
+        boolean wrappingWorld,
+        boolean playRecord,
+        boolean recordExperiment) {
 }

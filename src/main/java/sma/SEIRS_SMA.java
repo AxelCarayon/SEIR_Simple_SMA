@@ -9,6 +9,7 @@ import environment.WrappingChunkedSEIRSEnvironment;
 import models.Parameters;
 import agents.RandomWalkingAgent;
 import environment.ChunkedSEIRSEnvironment;
+import scheduler.DeterministScheduler;
 import scheduler.FairAsynchronousScheduler;
 import scheduler.FairSynchronousScheduler;
 import scheduler.Scheduler;
@@ -19,13 +20,17 @@ import view.FrameBuilder;
 import view.StatisticsCanvas;
 
 import java.awt.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
-@SuppressWarnings("InfiniteLoopStatement")
+@SuppressWarnings({"InfiniteLoopStatement", "ResultOfMethodCallIgnored"})
 public class SEIRS_SMA extends Randomized implements SMA{
 
     private final Parameters parameters;
@@ -116,10 +121,18 @@ public class SEIRS_SMA extends Randomized implements SMA{
     }
 
     private void initScheduler() {
-        if (parameters.synchronousMode()) {
-            scheduler = new FairSynchronousScheduler(parameters.seed());
+        if (parameters.playRecord()) {
+            if (parameters.recordExperiment()) {
+                throw new IllegalStateException("You cannot record and play an experiment at the same time. " +
+                        "Please check the parameters.yaml file.");
+            }
+            scheduler = new DeterministScheduler("src/main/resources/executionOrder.csv");
         } else {
-            scheduler = new FairAsynchronousScheduler();
+            if (parameters.synchronousMode()) {
+                scheduler = new FairSynchronousScheduler(parameters.seed());
+            } else {
+                scheduler = new FairAsynchronousScheduler();
+            }
         }
         scheduler.init(agents);
     }
@@ -129,6 +142,26 @@ public class SEIRS_SMA extends Randomized implements SMA{
             environment = new WrappingChunkedSEIRSEnvironment(parameters.size(),agents);
         } else {
             environment = new ChunkedSEIRSEnvironment(parameters.size(),agents);
+        }
+    }
+
+    private void recordExperiment() {
+        try{
+            File file = new File("src/main/resources/executionOrder.csv");
+            file.createNewFile();
+            FileWriter fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            List<String> executionOrder= environment.getExecutionOrder();
+
+            for (int i = 0; i < executionOrder.size()-2; i++) {
+                bw.write(executionOrder.get(i)+",");
+            }
+            bw.write(executionOrder.get(executionOrder.size()-1));
+            bw.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -146,6 +179,11 @@ public class SEIRS_SMA extends Randomized implements SMA{
                 doNextCycle();
                 cpt++;
             }
+
+            if (parameters.recordExperiment()) {
+                recordExperiment();
+            }
+
             Instant endTime = Instant.now();
             System.out.println("Simulation done !");
             Duration duration = Duration.between(startTime,endTime);

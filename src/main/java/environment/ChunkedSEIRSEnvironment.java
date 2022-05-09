@@ -19,6 +19,7 @@ public class ChunkedSEIRSEnvironment implements SEIRSEnvironment {
     public final int size;
     private final SEIRSAgent[] agents;
     private List<SEIRSAgent>[][] chunks;
+    private final List<String> executionOrder = new ArrayList<>();
 
     public ChunkedSEIRSEnvironment(int size, SEIRSAgent[] agents) {
         this.agents = agents;
@@ -111,6 +112,7 @@ public class ChunkedSEIRSEnvironment implements SEIRSEnvironment {
             chunks[oldPosition.x/CHUNK_SIZE][oldPosition.y/CHUNK_SIZE].remove((SEIRSAgent) agent);
             chunks[newPosition.x/CHUNK_SIZE][newPosition.y/CHUNK_SIZE].add((SEIRSAgent) agent);
         }
+        executionOrder.add(((SEIRSAgent)agent).getId());
     }
 
     @Override
@@ -147,5 +149,10 @@ public class ChunkedSEIRSEnvironment implements SEIRSEnvironment {
     @Override
     public int getSize() {
         return size;
+    }
+
+    @Override
+    public List<String> getExecutionOrder() {
+        return executionOrder;
     }
 }

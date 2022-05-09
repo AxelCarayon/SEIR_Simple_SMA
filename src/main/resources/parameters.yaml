@@ -6,6 +6,8 @@ recoveryRate: 0.14
 nbOfCycles: 2000
 nbOfPatientZero: 1
 population: 3000
+recordExperiment: false
+playRecord: true
 seed: 120
 size: 1000
 wrappingWorld : true

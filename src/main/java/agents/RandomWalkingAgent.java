@@ -17,9 +17,11 @@ public class RandomWalkingAgent extends Randomized implements SEIRSAgent {
 
     private List<Point> authorizedPositions;
     private Point nextPosition;
+    private final String id;
 
     public RandomWalkingAgent(Point position, long seed, SEIRSEnvironment environment) {
         super(seed);
+        this.id = String.valueOf(seed);
         this.position = position;
         this.state = new SuceptibleSEIRSState(this);
         this.environment = environment;
@@ -100,5 +102,10 @@ public class RandomWalkingAgent extends Randomized implements SEIRSAgent {
 
     @Override
     public Point getPosition() { return position; }
+
+    @Override
+    public String getId() {
+        return this.id;
+    }
 
 }
