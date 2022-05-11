@@ -153,8 +153,7 @@ public class SEIRS_SMA extends Randomized implements SMA{
             BufferedWriter bw = new BufferedWriter(fw);
 
             List<String> executionOrder= environment.getExecutionOrder();
-
-            for (int i = 0; i < executionOrder.size()-2; i++) {
+            for (int i = 0; i < executionOrder.size()-1; i++) {
                 bw.write(executionOrder.get(i)+",");
             }
             bw.write(executionOrder.get(executionOrder.size()-1));

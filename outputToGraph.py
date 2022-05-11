@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 OUTPUT_FILE_LOCATION = 'src/main/resources/output.csv'
 OUTPUT_FOLDER = 'src/main/resources/pythonOutput'
-JAR_LOCATION = 'out/artifacts/SMA_SEIR_jar/SMA-SEIR.jar'
+JAR_LOCATION = 'out/artifacts/SEIR_Simple_SMA_jar/SEIR_Simple_SMA.jar'
 YAML_FILE = 'src/main/resources/parameters.yaml'
 
 

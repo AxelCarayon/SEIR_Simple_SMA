@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="SMA-SEIR" />
+        <module name="SEIR_Simple_SMA" />
       </profile>
     </annotationProcessing>
   </component>

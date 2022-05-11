@@ -6,14 +6,12 @@ import utils.YamlReader;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.EmptyStackException;
-import java.util.Stack;
+import java.util.*;
 
 public class DeterministScheduler implements Scheduler {
 
     private Wakeable[] agents;
-    private final Stack<String>  wakeUpOrder = new Stack<>();
+    private final Queue<String> wakeUpOrder = new LinkedList<>();
 
     public DeterministScheduler(String csvFile) {
         readCSV(csvFile);
@@ -36,9 +34,9 @@ public class DeterministScheduler implements Scheduler {
 
     @Override
     public void doNextCycle() {
-        for (int i = 0 ; i<agents.length-1; i++) {
+        for (int i = 0 ; i<agents.length; i++) {
             try {
-                int next = Integer.parseInt(wakeUpOrder.pop());
+                int next = Integer.parseInt(wakeUpOrder.poll());
                 agents[next-(int)YamlReader.getParams().seed()].wakeUp();
             } catch (EmptyStackException e) {
                 System.err.println("Last record entry was read, simulation cannot continue further.");
