@@ -1,6 +1,7 @@
 package agents.states;
 
-import agents.SEIRSAgent;
+import agents.seirs.CyclicSEIRSAgent;
+import agents.seirs.SEIRSAgent;
 
 public abstract class SEIRSState {
 
@@ -9,7 +10,7 @@ public abstract class SEIRSState {
     public final static String SUCEPTIBLE = "SUCEPTIBLE";
     public final static String RECOVERED = "RECOVERED";
 
-    protected final agents.SEIRSAgent agent;
+    protected final SEIRSAgent agent;
 
     SEIRSState(SEIRSAgent agent) {
         this.agent = agent;

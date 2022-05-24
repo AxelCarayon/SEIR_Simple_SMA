@@ -1,6 +1,7 @@
 package environment;
 
-import agents.SEIRSAgent;
+import agents.seirs.CyclicSEIRSAgent;
+import agents.seirs.SEIRSAgent;
 
 import java.awt.*;
 import java.util.HashMap;

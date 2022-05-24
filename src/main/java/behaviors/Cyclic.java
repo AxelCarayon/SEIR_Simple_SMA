@@ -1,5 +1,5 @@
 package behaviors;
 
-public interface Wakeable {
+public interface Cyclic {
     void wakeUp();
 }

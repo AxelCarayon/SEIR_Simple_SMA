@@ -1,10 +1,8 @@
-package agents;
+package behaviors;
 
 import agents.states.SEIRSState;
-import behaviors.Positionable2D;
 
-public interface SEIRSAgent extends Agent, Positionable2D {
-
+public interface Infectious {
     void changeState(SEIRSState SEIRSState);
     SEIRSState getState();
     boolean isExposed();

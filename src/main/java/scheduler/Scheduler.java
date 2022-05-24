@@ -1,10 +1,10 @@
 package scheduler;
 
-import behaviors.Wakeable;
+import agents.Agent;
 
 public interface Scheduler {
 
-    void init(Wakeable[] agents);
+    void init(Agent[] agents);
     void doNextCycle();
 
 }

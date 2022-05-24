@@ -1,6 +1,6 @@
 package view;
 
-import agents.SEIRSAgent;
+import agents.seirs.SEIRSAgent;
 import agents.states.SEIRSState;
 import environment.ChunkedSEIRSEnvironment;
 import environment.SEIRSEnvironment;
@@ -10,11 +10,11 @@ import java.awt.*;
 
 public class DisplaySquaredEnvironment extends JPanel {
 
-    private final SEIRSAgent[] SEIRSAgents;
+    private final SEIRSAgent[] CyclicSEIRSAgents;
 
-    public DisplaySquaredEnvironment(SEIRSEnvironment environment, SEIRSAgent[] SEIRSAgents) {
+    public DisplaySquaredEnvironment(SEIRSEnvironment environment, SEIRSAgent[] CyclicSEIRSAgents) {
         this.setDoubleBuffered(true);
-        this.SEIRSAgents = SEIRSAgents;
+        this.CyclicSEIRSAgents = CyclicSEIRSAgents;
         setSize(environment.getSize(),environment.getSize());
         setVisible(true);
     }
@@ -29,10 +29,10 @@ public class DisplaySquaredEnvironment extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        for (SEIRSAgent SEIRSAgent : SEIRSAgents) {
-            if (SEIRSAgent != null) {
-                colorAgent(g, SEIRSAgent);
-                drawCenteredCircle(g, SEIRSAgent.getPosition().x, SEIRSAgent.getPosition().y);
+        for (SEIRSAgent agent : CyclicSEIRSAgents) {
+            if (agent != null) {
+                colorAgent(g, agent);
+                drawCenteredCircle(g, agent.getPosition().x, agent.getPosition().y);
             }
         }
     }

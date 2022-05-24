@@ -1,4 +1,4 @@
-package agents;
+package agents.seirs;
 
 import agents.states.SEIRSState;
 import agents.states.SuceptibleSEIRSState;
@@ -6,50 +6,38 @@ import behaviors.Randomized;
 import environment.SEIRSEnvironment;
 import utils.YamlReader;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.List;
 
-public class RandomWalkingAgent extends Randomized implements SEIRSAgent {
+public abstract class FairInfectionRWAgent extends Randomized implements SEIRSAgent {
 
     protected Point position;
     protected final SEIRSEnvironment environment;
     protected SEIRSState state;
 
-    private List<Point> authorizedPositions;
-    private Point nextPosition;
-    private final String id;
-
-    public RandomWalkingAgent(Point position, long seed, SEIRSEnvironment environment) {
+    protected List<Point> authorizedPositions;
+    protected Point nextPosition;
+    public FairInfectionRWAgent(Point position, long seed, SEIRSEnvironment environment) {
         super(seed);
-        this.id = String.valueOf(seed);
         this.position = position;
         this.state = new SuceptibleSEIRSState(this);
         this.environment = environment;
         r.setSeed(seed);
     }
 
-    private void move() {
+    protected void move() {
         state.onMovement();
         environment.notifyNewPosition(nextPosition,this);
         position = nextPosition;
     }
 
-    private void perceiveAuthorizedPositions() {
+    protected void perceiveAuthorizedPositions() {
         authorizedPositions =  environment.perceiveAuthorizedPositions(this);
     }
 
-    private void decideNextMove() {
+    protected void decideNextMove() {
         int next = r.nextInt(authorizedPositions.size());
         nextPosition = authorizedPositions.get(next);
-    }
-
-    @Override
-    public void wakeUp() {
-        perceiveAuthorizedPositions();
-        if (!authorizedPositions.isEmpty()) {
-            decideNextMove();
-            move();
-        }
     }
 
     @Override
@@ -102,10 +90,4 @@ public class RandomWalkingAgent extends Randomized implements SEIRSAgent {
 
     @Override
     public Point getPosition() { return position; }
-
-    @Override
-    public String getId() {
-        return this.id;
-    }
-
 }
