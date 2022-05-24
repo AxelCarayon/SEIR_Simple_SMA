@@ -1,14 +1,18 @@
 package scheduler;
 
+import agents.Agent;
+import agents.CyclicAgent;
+import agents.ThreePhasedAgent;
 import behaviors.Randomized;
-import behaviors.Wakeable;
 
 import java.util.*;
 
 public class FairSynchronousScheduler extends Randomized implements Scheduler {
 
-    private Wakeable[] agents;
+    private Agent[] agents;
     private Stack<Integer> executionOrder;
+
+    private Boolean isThreePhased;
 
     public FairSynchronousScheduler(long seed) {
         super(seed);
@@ -21,15 +25,38 @@ public class FairSynchronousScheduler extends Randomized implements Scheduler {
         Collections.shuffle(executionOrder,r);
     }
 
-    private void wakeAgents() {
+    private void wakeAgents(CyclicAgent[] agents) {
         while (!executionOrder.isEmpty()) {
-            agents[(executionOrder.pop())].wakeUp();
+            (agents[(executionOrder.pop())]).wakeUp();
 
         }
     }
 
+    private void perceiveAll(ThreePhasedAgent[] agents) {
+        for (Integer next : executionOrder) {
+            agents[next].perceive();
+        }
+    }
+
+    private void decideAll(ThreePhasedAgent[] agents) {
+        for (Integer next : executionOrder) {
+            agents[next].decide();
+        }
+    }
+
+    private void actAll(ThreePhasedAgent[] agents) {
+        for (Integer next : executionOrder) {
+            agents[next].act();
+        }
+        executionOrder.clear();
+    }
+
     @Override
-    public void init(Wakeable[] agents) {
+    public void init(Agent[] agents) {
+        isThreePhased = switch (agents[0]) {
+            case CyclicAgent ignored -> false;
+            case ThreePhasedAgent ignored -> true;
+        };
         this.agents = agents;
         executionOrder = new Stack<>();
     }
@@ -37,6 +64,14 @@ public class FairSynchronousScheduler extends Randomized implements Scheduler {
     @Override
     public void doNextCycle() {
         generateExecutionOrder();
-        wakeAgents();
+        if (isThreePhased) {
+            ThreePhasedAgent[] agents = (ThreePhasedAgent[])this.agents;
+            perceiveAll(agents);
+            decideAll(agents);
+            actAll(agents);
+        }else {
+            CyclicAgent[] agents = (CyclicAgent[])this.agents;
+            wakeAgents(agents);
+        }
     }
 }

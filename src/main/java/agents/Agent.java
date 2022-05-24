@@ -1,8 +1,9 @@
 package agents;
 
-import behaviors.Wakeable;
+import behaviors.Cyclic;
 
-public interface Agent extends Wakeable {
+public sealed interface Agent
+permits CyclicAgent, ThreePhasedAgent{
 
     String getId();
 }

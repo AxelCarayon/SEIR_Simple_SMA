@@ -1,13 +1,13 @@
 package sma;
 
-import agents.FairInfectionRWAgent;
-import agents.SEIRSAgent;
+import agents.Agent;
+import agents.RandomWalkingAgent3P;
+import agents.seirs.*;
 import agents.states.InfectedSEIRSState;
 import behaviors.Randomized;
 import environment.SEIRSEnvironment;
 import environment.WrappingChunkedSEIRSEnvironment;
 import models.Parameters;
-import agents.RandomWalkingAgent;
 import environment.ChunkedSEIRSEnvironment;
 import scheduler.DeterministScheduler;
 import scheduler.FairAsynchronousScheduler;
@@ -34,7 +34,7 @@ import java.util.List;
 public class SEIRS_SMA extends Randomized implements SMA{
 
     private final Parameters parameters;
-    private final SEIRSAgent[] agents;
+    private final Agent[] agents;
     private SEIRSEnvironment environment;
     private Scheduler scheduler;
     private StatisticsCanvas statisticsCanvas;
@@ -47,7 +47,11 @@ public class SEIRS_SMA extends Randomized implements SMA{
         super(params.seed());
         parameters = YamlReader.getParams();
         r.setSeed(parameters.seed());
-        agents = new RandomWalkingAgent[parameters.population()];
+        if (parameters.threePhased()) {
+            agents = new ThreePhasedSEIRSAgent[parameters.population()];
+        }else {
+            agents = new CyclicSEIRSAgent[parameters.population()];
+        }
         initEnvironment();
         initPopulation();
         infectPatientZero();
@@ -59,7 +63,7 @@ public class SEIRS_SMA extends Randomized implements SMA{
 
     private void initGraphics() {
         statisticsCanvas = new StatisticsCanvas(300,parameters.size());
-        display = new DisplaySquaredEnvironment(environment,agents);
+        display = new DisplaySquaredEnvironment(environment,(SEIRSAgent[]) agents);
 
         fb.setSimulationCanvas(display);
         fb.setStatsCanvas(statisticsCanvas);
@@ -99,11 +103,19 @@ public class SEIRS_SMA extends Randomized implements SMA{
     private void initPopulation() {
         for (int i = 0; i<parameters.population();i++) {
             Point position = new Point(r.nextInt(parameters.size()),r.nextInt(parameters.size()));
-            SEIRSAgent agent;
-            if (parameters.infectionStacks()) {
-                agent = new RandomWalkingAgent(position,(parameters.seed()+i),environment);
+            Agent agent;
+            if (parameters.threePhased()){
+                if (parameters.infectionStacks()) {
+                    agent = new RandomWalkingAgent3P(position,(parameters.seed()+i),environment);
+                } else {
+                    agent = new FairInfectionRWAgent3P(position,(parameters.seed()+i),environment);
+                }
             } else {
-                agent = new FairInfectionRWAgent(position,(parameters.seed()+i),environment);
+                if (parameters.infectionStacks()) {
+                    agent = new RandomWalkingAgentCyclic(position,(parameters.seed()+i),environment);
+                } else {
+                    agent = new FairInfectionRWAgentCyclic(position,(parameters.seed()+i),environment);
+                }
             }
             agents[i] = agent;
         }
@@ -112,9 +124,9 @@ public class SEIRS_SMA extends Randomized implements SMA{
     private void infectPatientZero() {
         for (int i=0 ; i< parameters.nbOfPatientZero(); i++) {
             int nextInt = (r.nextInt(parameters.population()));
-            SEIRSAgent agent = agents[nextInt];
+            SEIRSAgent agent = (SEIRSAgent)agents[nextInt];
             while (agent.getState() instanceof InfectedSEIRSState) {
-                agent = agents[(r.nextInt(parameters.population()))];
+                agent = (SEIRSAgent)agents[(r.nextInt(parameters.population()))];
             }
             agent.changeState(new InfectedSEIRSState(agent));
         }
@@ -139,9 +151,9 @@ public class SEIRS_SMA extends Randomized implements SMA{
 
     private void initEnvironment() {
         if (parameters.wrappingWorld()) {
-            environment = new WrappingChunkedSEIRSEnvironment(parameters.size(),agents);
+            environment = new WrappingChunkedSEIRSEnvironment(parameters.size(),(SEIRSAgent[]) agents);
         } else {
-            environment = new ChunkedSEIRSEnvironment(parameters.size(),agents);
+            environment = new ChunkedSEIRSEnvironment(parameters.size(),(SEIRSAgent[]) agents);
         }
     }
 

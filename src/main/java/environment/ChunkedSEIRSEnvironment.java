@@ -1,6 +1,8 @@
 package environment;
 
-import agents.SEIRSAgent;
+import agents.Agent;
+import agents.seirs.CyclicSEIRSAgent;
+import agents.seirs.SEIRSAgent;
 import agents.states.InfectedSEIRSState;
 import agents.states.SEIRSState;
 import behaviors.Positionable2D;
@@ -112,7 +114,7 @@ public class ChunkedSEIRSEnvironment implements SEIRSEnvironment {
             chunks[oldPosition.x/CHUNK_SIZE][oldPosition.y/CHUNK_SIZE].remove((SEIRSAgent) agent);
             chunks[newPosition.x/CHUNK_SIZE][newPosition.y/CHUNK_SIZE].add((SEIRSAgent) agent);
         }
-        executionOrder.add(((SEIRSAgent)agent).getId());
+        executionOrder.add(((Agent)agent).getId());
     }
 
     @Override
@@ -139,8 +141,8 @@ public class ChunkedSEIRSEnvironment implements SEIRSEnvironment {
         map.put(SEIRSState.RECOVERED,0);
         map.put(SEIRSState.SUCEPTIBLE,0);
 
-        for (SEIRSAgent SEIRSAgent : agents) {
-            String state = SEIRSAgent.getState().toString();
+        for (SEIRSAgent agent : agents) {
+            String state = agent.getState().toString();
             map.put(state,map.get(state)+1);
         }
         return map;

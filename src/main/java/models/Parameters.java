@@ -17,5 +17,6 @@ public record Parameters(
         boolean infectionStacks,
         boolean wrappingWorld,
         boolean playRecord,
-        boolean recordExperiment) {
+        boolean recordExperiment,
+        boolean threePhased) {
 }
