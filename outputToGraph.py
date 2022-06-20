@@ -53,7 +53,7 @@ def make_diagram(filename):
 
 def run_java_jar(filename):
     import subprocess
-    subprocess.call(['java', '-jar', filename])
+    subprocess.call(['java', '-jar',"--enable-preview", filename])
 
 
 def copy_to_output_folder(filename):
