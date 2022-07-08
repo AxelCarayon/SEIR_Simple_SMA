@@ -178,6 +178,7 @@ public class SEIRS_SMA extends Randomized implements SMA{
 
     @Override
     public void run() {
+        calculateDensity();
         Instant startTime = Instant.now();
         System.out.println("Starting simulation at : "+ Date.from(startTime));
         if (parameters.nbOfCycles() <0) {
@@ -201,6 +202,12 @@ public class SEIRS_SMA extends Randomized implements SMA{
             System.out.println("Elapsed time : " + duration.toHoursPart() + " hours, " + duration.toMinutesPart() + " minutes, " + duration.toSecondsPart() + "seconds.");
             System.exit(0);
         }
+    }
+
+    private void calculateDensity() {
+        int pixels = parameters.size()*parameters.size();
+        int agents = parameters.population();
+        System.out.println("Population density is : " + (float)agents/pixels + " agents per pixel.");
     }
 
     public static void main(String[] args) {

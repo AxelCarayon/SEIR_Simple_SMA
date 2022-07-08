@@ -1,13 +1,12 @@
 package agents.seirs;
 
-import agents.ThreePhasedAgent;
 import environment.SEIRSEnvironment;
 
 import java.awt.*;
 
 public class FairInfectionRWAgent3P extends FairInfectionRWAgent implements ThreePhasedSEIRSAgent {
 
-    private String id;
+    private final String id;
 
     public FairInfectionRWAgent3P(Point position, long seed, SEIRSEnvironment environment) {
         super(position, seed, environment);

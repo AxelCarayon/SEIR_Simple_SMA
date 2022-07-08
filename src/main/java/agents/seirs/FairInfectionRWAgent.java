@@ -45,9 +45,13 @@ public abstract class FairInfectionRWAgent extends Randomized implements SEIRSAg
 
     @Override
     public boolean isExposed() {
+        return rollExposition(environment, position, r.nextInt(10000));
+    }
+
+    static boolean rollExposition(SEIRSEnvironment environment, Point position, int i2) {
         boolean isExposed = false;
-        for (int i = 0 ; i<environment.getInfectedNeighbors(position).size() ; i++) {
-            int roll = r.nextInt(10000)+1;
+        for (int i = 0; i< environment.getInfectedNeighbors(position).size() ; i++) {
+            int roll = i2 +1;
             if (roll <= YamlReader.getParams().infectionRate()*10000) {
                 isExposed = true;
             }

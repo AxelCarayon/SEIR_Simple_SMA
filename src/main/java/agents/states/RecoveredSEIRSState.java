@@ -1,6 +1,5 @@
 package agents.states;
 
-import agents.seirs.CyclicSEIRSAgent;
 import agents.seirs.SEIRSAgent;
 
 public class RecoveredSEIRSState extends SEIRSState {
