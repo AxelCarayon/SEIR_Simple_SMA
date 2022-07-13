@@ -1,6 +1,5 @@
 package agents.states;
 
-import agents.seirs.CyclicSEIRSAgent;
 import agents.seirs.SEIRSAgent;
 
 public class SuceptibleSEIRSState extends SEIRSState {
@@ -19,5 +18,11 @@ public class SuceptibleSEIRSState extends SEIRSState {
     @Override
     public String toString() {
         return SUCEPTIBLE;
+    }
+
+    public static void main(String[] args) {
+        float i = 4.12f;
+        int i2 = (int) i;
+        System.out.println((float)i2);
     }
 }

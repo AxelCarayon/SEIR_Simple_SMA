@@ -1,13 +1,12 @@
 package agents.seirs;
 
 import environment.SEIRSEnvironment;
-import utils.YamlReader;
 
 import java.awt.*;
 
 public class FairInfectionRWAgentCyclic extends FairInfectionRWAgent implements CyclicSEIRSAgent {
 
-    private String id;
+    private final String id;
     public FairInfectionRWAgentCyclic(Point position, long seed, SEIRSEnvironment environment) {
         super(position, seed, environment);
         this.id = String.valueOf(seed);

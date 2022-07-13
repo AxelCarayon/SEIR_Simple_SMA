@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class RandomWalkingAgent3P extends RandomWakingAgent implements ThreePhasedSEIRSAgent {
 
-    private String id;
+    private final String id;
 
     public RandomWalkingAgent3P(Point position, long seed, SEIRSEnvironment environment) {
         super(position, seed, environment);

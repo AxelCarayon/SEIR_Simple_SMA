@@ -53,7 +53,7 @@ def make_diagram(filename):
 
 def run_java_jar(filename):
     import subprocess
-    subprocess.call(['java', '-jar', filename])
+    subprocess.call(['java', '-jar',"--enable-preview", filename])
 
 
 def copy_to_output_folder(filename):
@@ -82,5 +82,6 @@ def edit_yaml(key, value):
 #         copyToOutputFolder(f"output{i}.csv")
 #         makeDiagram(f"{OUTPUT_FOLDER}/output{i}.csv")
 
-run_java_jar(JAR_LOCATION)
-make_diagram(OUTPUT_FILE_LOCATION)
+if __name__ == "__main__":
+    run_java_jar(JAR_LOCATION)
+    make_diagram(OUTPUT_FILE_LOCATION)

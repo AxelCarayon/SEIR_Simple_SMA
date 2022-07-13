@@ -1,17 +1,17 @@
 graphicalMode: true
-incubationRate: 0.3
-infectionRate: 0.8
-looseImmunityRate: 0.008
-recoveryRate: 0.14
-nbOfCycles: 2000
+incubationRate: 0.33
+infectionRate: 0.5
+looseImmunityRate: 0.0027
+recoveryRate: 0.10
+nbOfCycles: 720
 nbOfPatientZero: 1
-population: 3000
+population: 1000
 recordExperiment: false
 playRecord: false
 seed: 120
-size: 1000
+size: 400
 wrappingWorld : true
 synchronousMode: false
 timeBetweenCycles: 0
-infectionStacks : false
-threePhased : true
+infectionStacks : true
+threePhased : false

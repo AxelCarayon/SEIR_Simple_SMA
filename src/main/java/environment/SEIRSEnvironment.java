@@ -1,6 +1,5 @@
 package environment;
 
-import agents.seirs.CyclicSEIRSAgent;
 import agents.seirs.SEIRSAgent;
 
 import java.awt.*;

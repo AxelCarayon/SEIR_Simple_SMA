@@ -1,7 +1,6 @@
 package environment;
 
 import agents.Agent;
-import agents.seirs.CyclicSEIRSAgent;
 import agents.seirs.SEIRSAgent;
 import agents.states.InfectedSEIRSState;
 import agents.states.SEIRSState;
@@ -50,8 +49,8 @@ public class ChunkedSEIRSEnvironment implements SEIRSEnvironment {
 
     private Point getRelativePoint(int relativeTo, Point p) {
         return switch (relativeTo) {
-            case LEFT -> new Point(p.x-1,p.y);
-            case RIGHT -> new Point(p.x+1,p.y);
+            //case LEFT -> new Point(p.x-1,p.y);
+            case LEFT, RIGHT -> new Point(p.x+1,p.y);
             case UP -> new Point(p.x,p.y-1);
             case DOWN -> new Point(p.x,p.y+1);
             case CENTER -> p;

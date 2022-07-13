@@ -9,6 +9,8 @@ import utils.YamlReader;
 import java.awt.*;
 import java.util.List;
 
+import static agents.seirs.FairInfectionRWAgent.rollExposition;
+
 public abstract class RandomWakingAgent extends Randomized implements SEIRSAgent {
 
     protected Point position;
@@ -46,14 +48,7 @@ public abstract class RandomWakingAgent extends Randomized implements SEIRSAgent
 
     @Override
     public boolean isExposed() {
-        boolean isExposed = false;
-        for (int i = 0 ; i<environment.getInfectedNeighbors(position).size() ; i++) {
-            int roll = r.nextInt(10000)+1;
-            if (roll <= YamlReader.getParams().infectionRate()*10000) {
-                isExposed = true;
-            }
-        }
-        return isExposed;
+        return rollExposition(environment, position, r.nextInt(10000));
     }
 
     @Override
